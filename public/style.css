@@ -1,0 +1,10 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: linear-gradient(0deg, red 50%, blue 100%) no-repeat;
+  height: 100vh;
+  overflow: hidden;
+}
