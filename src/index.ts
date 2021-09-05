@@ -3,8 +3,6 @@ import DebugOverlay from './DebugOverlay';
 import Level from './Level';
 export const MAX_SUN_COUNT = 9999
 
-const debugTexts = new Container()
-
 export default class Core {
   public running: boolean = true
   public showDebug: boolean = true
@@ -45,10 +43,10 @@ export default class Core {
         e.preventDefault()
         if(this.showDebug) {
           this.showDebug = false
-          debugTexts.visible = false
+          this.debugOverlay.visible = false
         } else {
           this.showDebug = true
-          debugTexts.visible = true
+          this.debugOverlay.visible = true
         }
       }
     })
