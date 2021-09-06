@@ -2,6 +2,7 @@ import webpack from 'webpack'
 import devserver from 'webpack-dev-server'
 import * as path from 'path'
 import HTMLWebpackPlugin from 'html-webpack-plugin'
+import CopyWebpackPlugin from 'copy-webpack-plugin'
 
 const config: webpack.Configuration | { devServer: devserver } = {
   entry: path.resolve(__dirname, 'src/index.ts'),
@@ -12,7 +13,7 @@ const config: webpack.Configuration | { devServer: devserver } = {
   resolve: {
     extensions: ['.ts', '.js', '.json'],
     alias: {
-      // '@/': path.resolve(__dirname, 'src/**/*')
+      // '': path.resolve(__dirname, 'src/**/*')
     }
   },
   devServer: {
@@ -23,6 +24,14 @@ const config: webpack.Configuration | { devServer: devserver } = {
   plugins: [
     new HTMLWebpackPlugin({
       template: path.resolve(__dirname, 'public/index.html')
+    }),
+    new (CopyWebpackPlugin as any)({
+      patterns: [
+        {
+          from: path.join(__dirname, '/static'),
+          to: './static/'
+        }
+      ]
     })
   ],
   module: {

@@ -1,11 +1,12 @@
 import { Graphics } from "pixi.js"
-import { MAX_SUN_COUNT } from "."
+import { Sounds } from "."
+import { MAX_SUN_COUNT } from "./Constants"
 import Level from "./Level"
 
 export default class Sun extends Graphics {
   private level: Level
-  private count: number
-  private timer: number
+  public count: number
+  public timer: number
   public minY: number
 
   public constructor(level: Level, count?: number) {
@@ -23,7 +24,7 @@ export default class Sun extends Graphics {
     this.beginFill(0xffff33)
     this.drawCircle(120, 20, 25)
     this.endFill()
-  
+
     this.on('click', this.onClick)
   }
 
@@ -34,12 +35,13 @@ export default class Sun extends Graphics {
     this.parent.removeChild(this)
     this.level.suns.splice(this.level.suns.findIndex(p => p.minY === this.minY), 1)
     this.destroy()
+    
+    this.level.core.soundManager.playSound(Sounds.SUN_POINTS)
   }
 
   public update(dt: number): void {
     this.timer += dt
 
-    
     if(this.timer > 700) {
       this.parent.removeChild(this)
       this.destroy()

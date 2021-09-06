@@ -1,4 +1,5 @@
 import { Graphics } from "pixi.js"
+import { Sounds } from "."
 import Level from "./Level"
 
 export default class Projectile extends Graphics {
@@ -17,9 +18,7 @@ export default class Projectile extends Graphics {
   public update(dt: number): void {
     this.position.x += dt * 3
 
-    const { x } = this.getBounds()
-
-    if(x > 750) {
+    if(this.x > 750) {
       const i = this.level.projectiles.findIndex(p => p === this)
 
       try {
@@ -33,7 +32,7 @@ export default class Projectile extends Graphics {
     const { y } = this.getBounds() 
     const z = this.level.zombies.find(p => {
       const l = p.getBounds()
-      return x > l.x && x < l.x + l.width && y > l.y && y < l.y + l.height
+      return this.x > l.x && this.x < l.x + l.width && y > l.y && y < l.y + l.height
     })
 
     if(z) {
@@ -41,6 +40,7 @@ export default class Projectile extends Graphics {
       const i = this.level.projectiles.findIndex(p => p === this)
 
       try {
+        this.level.core.soundManager.playSound(Sounds.PEA_HIT)
         this.parent.removeChild(this)
         this.level.projectiles[i].destroy()
         this.level.projectiles.splice(i, 1)

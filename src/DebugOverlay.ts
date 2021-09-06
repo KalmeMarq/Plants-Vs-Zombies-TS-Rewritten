@@ -1,6 +1,7 @@
 import { Container } from "@pixi/display";
 import { Text } from 'pixi.js'
 import Core from ".";
+import { isDev } from "./Constants";
 
 export default class DebugOverlay extends Container {
   private core: Core
@@ -15,7 +16,7 @@ export default class DebugOverlay extends Container {
     super()
     this.core = core
 
-    this.addDebugText(`PVZTS Rewritten ${process.env.NODE_ENV === 'development' ? '(v0.1/dev)' : 'v0.1'}`)
+    this.addDebugText(`PVZTS Rewritten ${isDev ? '(v0.2/dev)' : 'v0.1'}`)
     this.addDebugText('Level: null LevelID: -1')
     this.fpsT = this.addDebugText('FPS: ')
     this.sunsCT = this.addDebugText(`SunCount: ${0}`)

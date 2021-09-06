@@ -10,9 +10,9 @@ enum IPlantState {
 export default class Plant extends Graphics {
   private level: Level
   public timer: number
-  private pstate: IPlantState
-  private c: number
-  private r: number
+  public pstate: IPlantState
+  public c: number
+  public r: number
   public health: number
 
   public constructor(level: Level, x: number, y: number, r: number, c: number) {
@@ -39,16 +39,15 @@ export default class Plant extends Graphics {
       this.timer += dt
 
       if(this.timer > 200) {
-        this.timer = 0
-
-        const proj0G = new Projectile(this.level, this.position.x, this.position.y)
-        this.level.projectiles.push(proj0G)
-        this.level.core.root.addChild(proj0G)
-
         const t = this.level.zombies.find(z => z.r === this.r && z.x > this.x)
 
         if(t) {
           this.pstate = IPlantState.Shoot
+          this.timer = 0
+
+        const proj0G = new Projectile(this.level, this.position.x, this.position.y)
+        this.level.projectiles.push(proj0G)
+        this.level.core.root.addChild(proj0G)
         } else {
           this.pstate = IPlantState.StandBy
         }

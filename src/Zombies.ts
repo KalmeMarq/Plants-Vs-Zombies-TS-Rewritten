@@ -9,10 +9,10 @@ enum IZombieState {
 
 export default class Zombie extends Graphics {
   private level: Level
-  private speed: number = 0.5
+  private speed: number = 0.4
   public velX: number
   public r: number
-  private zstate: IZombieState
+  public zstate: IZombieState
   private target: null | Slot
   public health: number
 
@@ -59,10 +59,9 @@ export default class Zombie extends Graphics {
     if(this.zstate === IZombieState.Walk) {
       let p = this.level.slots.findIndex(l => {
         if(l.plant) {
-          const p = l.plant.getBounds()
-          const z = this.getBounds()
+          const p = l.plant
   
-          if(p.x + p.width > z.x && this.r === l.r && p.x < z.x + z.width) {
+          if(p.x + p.width > this.x && this.r === l.r && p.x < this.x + this.width) {
             return true
           }
         } else return false
@@ -86,8 +85,7 @@ export default class Zombie extends Graphics {
       }
     }
 
-    const { x } = this.getBounds()
-    if(x < 5) {
+    if(this.x < 5) {
       const i = this.level.zombies.findIndex(p => p === this)
 
       try {

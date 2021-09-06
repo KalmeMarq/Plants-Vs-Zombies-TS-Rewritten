@@ -1,7 +1,8 @@
 import { Graphics } from "pixi.js"
 import Plant from './Plant'
-import { MAX_SUN_COUNT } from "."
+import { Sounds } from "."
 import Level from "./Level"
+import { MAX_SUN_COUNT } from "./Constants"
 
 export default class Slot extends Graphics {
   private level: Level
@@ -26,7 +27,12 @@ export default class Slot extends Graphics {
     this.interactive = true
     this.on('click', (e) => {
       if(this.children.length > 0) {
-        this.removeChildren()
+        if(this.level.shovelSelected) {
+          this.level.core.soundManager.playSound(Sounds.PLANT)
+          this.removeChildren()
+          this.plant = null
+          this.level.shovelSelected = false
+        }
         return
       }
   
@@ -41,6 +47,8 @@ export default class Slot extends Graphics {
 
       this.plant = plantG
       this.addChild(plantG)
+
+      this.level.core.soundManager.playSound(Sounds.PLANT)
     })
   }
 }
