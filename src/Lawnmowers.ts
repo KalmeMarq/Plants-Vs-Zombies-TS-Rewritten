@@ -1,4 +1,5 @@
 import { Graphics } from "@pixi/graphics";
+import { Sprite } from "@pixi/sprite";
 import Level from "./Level";
 
 enum ILawnState {
@@ -15,13 +16,17 @@ export default class Lawnmowers extends Graphics {
     super()
 
     this.level = level
-    this.x = x
+    this.x = x - 20
     this.y = y
     this.r = r
 
-    this.beginFill(0x00ff88)
-    this.drawRect(2, 30, 60, 52)
-    this.endFill()
+    // this.beginFill(0x00ff88)
+    // this.drawRect(2, 30, 60, 52)
+    // this.endFill()
+
+    const lmS = this.addChild(Sprite.from('LawnMover'))
+    lmS.scale.set(0.7, 0.7)
+    lmS.position.set(-20, 20)
 
     this.lstate = ILawnState.StandBy
   }

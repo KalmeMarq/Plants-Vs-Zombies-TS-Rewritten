@@ -1,4 +1,5 @@
 import { Graphics } from "@pixi/graphics"
+import { Sprite } from "pixi.js"
 import Level from "./Level"
 import Projectile from "./Projectile"
 
@@ -8,22 +9,28 @@ enum IPlantState {
 }
 
 export default class Plant extends Graphics {
-  private level: Level
+  protected level: Level
   public timer: number
   public pstate: IPlantState
   public c: number
   public r: number
   public health: number
+  protected plantSprite: Sprite
 
   public constructor(level: Level, x: number, y: number, r: number, c: number) {
     super()
 
     this.level = level
 
-    this.beginFill(0xf40000)
+    // this.beginFill(0xf40000)
     this.position.set(x + 3, y + 3)
-    this.drawRect(0, 0, 64, 80)
-    this.endFill()
+    // this.drawRect(0, 0, 64, 80)
+    // this.endFill()
+
+    this.plantSprite = this.addChild(Sprite.from('PeaShooter'))
+    this.plantSprite.scale.set(0.6, 0.6)
+    this.plantSprite.position.x -= 2
+    this.plantSprite.position.y += 4
 
     this.r = r
     this.c = c
@@ -32,6 +39,11 @@ export default class Plant extends Graphics {
     this.pstate = IPlantState.StandBy
 
     this.health = 100
+  
+    this.init()
+  }
+
+  protected init(): void {
   }
 
   public update(dt: number): void {    

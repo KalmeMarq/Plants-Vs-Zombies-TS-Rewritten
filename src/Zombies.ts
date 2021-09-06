@@ -29,9 +29,9 @@ export default class Zombie extends Graphics {
     this.endFill()
 
     this.position.x = 750
-    this.position.y = 123 + Math.round(Math.random() * 4) * 85
+    this.position.y = 103 + Math.round(Math.random() * 4) * 94
   
-    this.r = (this.position.y - 123) / 85
+    this.r = (this.position.y - 103) / 94
 
     this.health = 150
 

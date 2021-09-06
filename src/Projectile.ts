@@ -1,4 +1,4 @@
-import { Graphics } from "pixi.js"
+import { Graphics, Sprite } from "pixi.js"
 import { Sounds } from "."
 import Level from "./Level"
 
@@ -9,10 +9,13 @@ export default class Projectile extends Graphics {
     super()
 
     this.level = level
-    this.beginFill(0xf4224f)
     this.position.set(x +3, y + 3)
-    this.drawRect(0, 0, 20, 20)
-    this.endFill()
+    // this.beginFill(0xf4224f)
+    // this.drawRect(0, 0, 20, 20)
+    // this.endFill()
+
+    const ppS = this.addChild(Sprite.from('PeaProject'))
+    ppS.scale.set(0.9, 0.9)
   }
 
   public update(dt: number): void {
@@ -36,7 +39,7 @@ export default class Projectile extends Graphics {
     })
 
     if(z) {
-      z.health -= 50
+      z.health -= 20
       const i = this.level.projectiles.findIndex(p => p === this)
 
       try {

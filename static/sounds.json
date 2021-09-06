@@ -21,5 +21,15 @@
     "sounds": [
       "pause.ogg"
     ]
+  },
+  "ui.shovel_tap": {
+    "sounds": [
+      "shovel.ogg"
+    ]
+  },
+  "music.grasswalk_ingame": {
+    "sounds": [
+      "music/grasswalk_ingame.mp3"
+    ]
   }
 }

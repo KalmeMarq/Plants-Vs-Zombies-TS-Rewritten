@@ -1,8 +1,10 @@
 import { Graphics } from "pixi.js"
 import Plant from './Plant'
-import { Sounds } from "."
+import { plantsel, Sounds } from "."
 import Level from "./Level"
-import { MAX_SUN_COUNT } from "./Constants"
+import { isDev, MAX_SUN_COUNT } from "./Constants"
+import Wallnut from "./Wallnut"
+import SnowPea from "./SnowPea"
 
 export default class Slot extends Graphics {
   private level: Level
@@ -18,9 +20,9 @@ export default class Slot extends Graphics {
     this.c = c
     this.plant = plant
 
-    this.lineStyle(1, 0x00ff00, 1)
-    this.beginFill(0x000000)
-    this.drawRect(x, y, 70, 85)
+    isDev && this.lineStyle(1, 0x0000ff, 1)
+    this.beginFill(0x000000, 0.0001)
+    this.drawRect(x, y, 75, 90)
     this.endFill()
     this.zIndex = -1
 
@@ -31,7 +33,7 @@ export default class Slot extends Graphics {
           this.level.core.soundManager.playSound(Sounds.PLANT)
           this.removeChildren()
           this.plant = null
-          this.level.shovelSelected = false
+          this.level.shovelBank?.setVisible(false)
         }
         return
       }
@@ -40,10 +42,9 @@ export default class Slot extends Graphics {
         return
       }
   
-      this.level.sunCount -= 50
-      this.level.core.debugOverlay.sunsCT.text = `SunCount: ${Math.min(this.level.sunCount, MAX_SUN_COUNT)}`
+      this.level.emit('subSun', 50)
 
-      const plantG = new Plant(this.level, x, y, r, c)
+      const plantG = plantsel === 0 ? new Plant(this.level, x, y, r, c) : plantsel === 2 ? new SnowPea(this.level, x, y, r, c) : new Wallnut(this.level, x, y, r, c)
 
       this.plant = plantG
       this.addChild(plantG)

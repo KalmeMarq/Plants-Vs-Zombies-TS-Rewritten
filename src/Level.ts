@@ -1,5 +1,7 @@
-import { Graphics } from "@pixi/graphics"
-import Core from "."
+import { Container } from "@pixi/display"
+import { Sprite } from "@pixi/sprite"
+import { Text } from "@pixi/text"
+import Core, { Sounds } from "."
 import { isDev } from "./Constants"
 import Lawnmowers from "./Lawnmowers"
 import Projectile from "./Projectile"
@@ -7,7 +9,70 @@ import Slot from "./Slot"
 import Sun from "./Sun"
 import Zombie from "./Zombies"
 
-export default class Level {
+class ShovelBank extends Container {
+  private level: Level
+  private shovel: Sprite
+
+  public constructor(level: Level, x: number, y: number) {
+    super()
+
+    this.level = level
+    this.x = x
+    this.y = y
+
+    const shovelG = Sprite.from('ShovelBank')
+    shovelG.position.set(0, 0)
+    this.addChild(shovelG)
+
+    shovelG.interactive = true
+    shovelG.buttonMode = true
+
+    shovelG.on('click', () => {
+      this.setVisible(!this.level.shovelSelected)
+    })
+
+    this.shovel = Sprite.from('Shovel')
+    this.shovel.position.set(-6, -6)
+    this.addChild(this.shovel)
+  }
+
+  public setVisible(v: boolean): void {
+    this.level.shovelSelected = v
+    this.shovel.visible = !v
+
+    if(v) {
+      this.level.core.soundManager.playSound(Sounds.SHOVEL_TAP)
+    }
+  }
+}
+
+class SunBank extends Container {
+  private level: Level
+  public text: Text
+
+  public constructor(level: Level, x: number, y: number) {
+    super()
+
+    this.level = level
+    this.x = x
+    this.y = y
+
+    const bg = Sprite.from('SunBank')
+    bg.position.set(0, 0)
+    this.addChild(bg)
+
+    this.text = new Text('0', {
+      fill: 0x000000,
+      fontSize: 18
+    })
+
+    this.text.anchor.set(0.5, 0)
+    this.text.position.set(this.width / 2, 60)
+    this.addChild(this.text)
+  }
+}
+
+export default class Level extends Container {
   public core: Core
   public sunCount = isDev ? 2000 : 0
   public slots: Slot[] = []
@@ -16,11 +81,22 @@ export default class Level {
   public suns: Sun[] = []
   public lawnmowers: Lawnmowers[] = []
   public shovelSelected: boolean = false
+  public sunBank: SunBank | null = null
+  public shovelBank: ShovelBank | null = null
 
   public constructor(core: Core) {
+    super()
     this.core = core
 
-    this.core.debugOverlay.sunsCT.text = `SunCount: ${this.sunCount}`
+    this.on('addSun', (count) => {
+      this.sunCount += count
+      if(this.sunBank) this.sunBank.text.text = this.sunCount.toString()
+    })
+
+    this.on('subSun', (count) => {
+      this.sunCount -= count
+      if(this.sunBank) this.sunBank.text.text = this.sunCount.toString()
+    })
 
     setInterval(() => {
       if(this.core.running) {
@@ -36,11 +112,15 @@ export default class Level {
       }
     }, 12500)
 
+    const bg = this.core.root.addChild(Sprite.from('Background1'))
+    bg.zIndex = -2
+    bg.position.x = -220
+
     for(let i = 0; i < 45; i++) {
       const c = (i % 9)
       const r = Math.floor(i / 9)
-      const x = c * 70 + 100
-      const y = r * 85 + 120
+      const x = c * 79 + 40
+      const y = r * 94 + 100
     
       const slot = new Slot(this, x, y, r, c, null)
       this.slots.push(slot)
@@ -48,26 +128,19 @@ export default class Level {
       this.core.root.addChild(slot)
     
       if(i % 9 === 0) {
-        const l0 = new Lawnmowers(this, x - 85, y, r)
+        const l0 = new Lawnmowers(this, x - 30, y, r)
         this.lawnmowers.push(l0)
         this.core.root.addChild(l0)
       }
     }
 
-    // this.createZombie()
+    this.shovelBank = new ShovelBank(this, 600, 10)
+    this.core.root.addChild(this.shovelBank)
+    this.sunBank = new SunBank(this, 100, 10)
+    this.sunBank.text.text = this.sunCount.toString()
+    this.core.root.addChild(this.sunBank)
 
-    const shovelG = new Graphics()
-    shovelG.position.set(600, 10)
-    shovelG.beginFill(0x0f9f90)
-    shovelG.drawRect(0, 0, 50, 70)
-    this.core.root.addChild(shovelG)
-
-    shovelG.interactive = true
-    shovelG.buttonMode = true
-
-    shovelG.on('click', () => {
-      this.shovelSelected = !this.shovelSelected
-    })
+    this.core.soundManager.playSound(Sounds.GRASS_WALK, 0.5)
   }
 
   public update(dt: number): void {

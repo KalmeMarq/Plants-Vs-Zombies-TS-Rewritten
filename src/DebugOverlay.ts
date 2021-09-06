@@ -6,7 +6,7 @@ import { isDev } from "./Constants";
 export default class DebugOverlay extends Container {
   private core: Core
   public fpsT
-  public sunsCT
+  // public sunsCT
   public projsT
   public plantsT
   public zombiesT
@@ -16,10 +16,12 @@ export default class DebugOverlay extends Container {
     super()
     this.core = core
 
-    this.addDebugText(`PVZTS Rewritten ${isDev ? '(v0.2/dev)' : 'v0.1'}`)
+    this.zIndex = 2000
+
+    this.addDebugText(`PVZTS Rewritten ${isDev ? '(v0.1.2/dev)' : 'v0.1.2'}`)
     this.addDebugText('Level: null LevelID: -1')
     this.fpsT = this.addDebugText('FPS: ')
-    this.sunsCT = this.addDebugText(`SunCount: ${0}`)
+    // this.sunsCT = this.addDebugText(`SunCount: ${0}`)
     this.projsT = this.addDebugText('Projectiles: 0')
     this.plantsT = this.addDebugText('Plants: 0')
     this.zombiesT = this.addDebugText('Zombies: 0')
@@ -28,18 +30,18 @@ export default class DebugOverlay extends Container {
 
   public addDebugText(str: string): Text {
     const t = new Text(str, {
-      fill: 0xdddddd,
-      fontSize: 16
+      fill: 0x000000,
+      fontSize: 16,
+      fontWeight: '800'
     })
     t.y = this.children.length * 18
-    t.zIndex = 2000
     this.addChild(t)
     return t
   }
 
   public update(dt: number): void {
     if(this.core.level) {
-      if(dt < 1 && this.core.showDebug) {
+      if(dt > 1 && this.core.showDebug) {
         this.fpsT.text = 'FPS: ' + Math.round(this.core.app.ticker.FPS).toString()
         this.projsT.text = `Projectiles: ${this.core.level.projectiles.length + this.core.level.suns.length}`
         this.zombiesT.text = `Zombies: ${this.core.level.zombies.length}`

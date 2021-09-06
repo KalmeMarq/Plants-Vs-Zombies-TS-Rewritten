@@ -29,8 +29,7 @@ export default class Sun extends Graphics {
   }
 
   private onClick(): void {
-    this.level.sunCount += this.count
-    this.level.core.debugOverlay.sunsCT.text = `SunCount: ${Math.min(this.level.sunCount, MAX_SUN_COUNT)}`
+    this.level.emit('addSun', this.count)
 
     this.parent.removeChild(this)
     this.level.suns.splice(this.level.suns.findIndex(p => p.minY === this.minY), 1)

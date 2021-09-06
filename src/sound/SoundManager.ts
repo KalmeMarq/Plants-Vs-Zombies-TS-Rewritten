@@ -2,7 +2,7 @@ import Core, { Sounds } from ".."
 
 export default class SoundManager {
   private core: Core
-  private context: AudioContext
+  public context: AudioContext
   private gainNode: GainNode
   private sounds: Map<string, AudioBuffer>
 
@@ -14,7 +14,7 @@ export default class SoundManager {
     this.gainNode.connect(this.context.destination)
   }
 
-  public playSound(sound: Sounds): void {
+  public playSound(sound: Sounds, volume?: number): void {
     const s = this.sounds.get(sound.getLocation())
     if(!s) return
 
@@ -22,7 +22,7 @@ export default class SoundManager {
     const source = this.context.createBufferSource()
     source.buffer = s
     source.connect(this.gainNode)
-    this.gainNode.gain.value = this.core.options.sound_master
+    this.gainNode.gain.value = this.core.options.sound_master * (volume ?? 1)
     source.start(0)
   }
 
