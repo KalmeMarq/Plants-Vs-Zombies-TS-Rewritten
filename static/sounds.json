@@ -1,0 +1,35 @@
+{
+  "ui.sun_points": {
+    "sounds": [
+      "points.ogg"
+    ]
+  },
+  "plant.pea_splat": {
+    "sounds": [
+      "splat.ogg",
+      "splat2.ogg",
+      "splat3.ogg"
+    ]
+  },
+  "plant.plant": {
+    "sounds": [
+      "plant.ogg",
+      "plant2.ogg"
+    ]
+  },
+  "ui.pause_game": {
+    "sounds": [
+      "pause.ogg"
+    ]
+  },
+  "ui.shovel_tap": {
+    "sounds": [
+      "shovel.ogg"
+    ]
+  },
+  "music.grasswalk_ingame": {
+    "sounds": [
+      "music/grasswalk_ingame.mp3"
+    ]
+  }
+}
