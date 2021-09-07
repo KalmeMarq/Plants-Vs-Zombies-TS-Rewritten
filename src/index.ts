@@ -1,32 +1,28 @@
 import { Application, Container, Graphics, Loader, Sprite, Texture, Text } from 'pixi.js'
+import BinaryReader from './binary/BinaryReader';
+import BinaryWriter from './binary/BinaryWriter';
 import DebugOverlay from './DebugOverlay';
+import FitWidthButton from './gui/components/FitWidthButton';
+import GUIScreen from './gui/screen/GUIScreen';
+import MainMenuScreen from './gui/screen/MainMenuScreen';
+import OptionsScreen from './gui/screen/OptionsScreen';
+import TitleScreen from './gui/screen/TitleScreen';
 import Level from './Level';
 import Options from './Options';
 import Slider from './Slider';
 import SoundManager from './sound/SoundManager';
 
-export let plantsel = 0
-window.addEventListener('keyup', (e) => {
-  if(e.key === '1') {
-    plantsel = 0
-  }
-
-  if(e.key === '2') {
-    plantsel = 1
-  }
-
-  if(e.key === '3') {
-    plantsel = 2
-  }
-})
-
 export class Sounds {
   public static SHOVEL_TAP: Sounds = new Sounds('ui.shovel_tap')
   public static SUN_POINTS: Sounds = new Sounds('ui.sun_points')
+  public static COIN: Sounds = new Sounds('ui.coin')
+  public static TAP: Sounds = new Sounds('ui.tap')
+  public static BLEEP: Sounds = new Sounds('ui.bleep')
   public static PEA_HIT: Sounds = new Sounds('plant.pea_splat')
   public static PLANT: Sounds = new Sounds('plant.plant')
   public static PAUSE: Sounds = new Sounds('ui.pause_game')
   public static GRASS_WALK: Sounds = new Sounds('music.grasswalk_ingame')
+  public static ACHIEVEMENT: Sounds = new Sounds('ui.earn_achievement')
 
   private location: string
   private constructor(location: string) {
@@ -38,88 +34,10 @@ export class Sounds {
   }
 }
 
-class OptionsScreen extends Graphics {
-  public constructor(core: Core) {
-    super()
-
-    this.beginFill(0xff22ff)
-    this.drawRect(400 - 200, 300 - 200, 400, 400)
-    this.endFill()
-
-    // const mb = this.addChild(Sprite.from('OptionsMenuBack'))
-    // const mbmk = mb.addChild(Sprite.from('OptionsMenuBackMask'))
-    // mb.mask = mbmk
-
-    const masterSlider = new Slider(400 - 150, 200 - 80, () => {
-      return core.options.sound_master
-    }, (v) => {
-        core.options.sound_master = v
-    }, (v) => {
-      return `Master: ${Math.round(v * 100)}%`
-    })
-    this.addChild(masterSlider)
-
-    const musicSlider = new Slider(400 - 150, 200 - 40, () => {
-      return core.options.sound_music
-    }, (v) => {
-        core.options.sound_music = v
-    }, (v) => {
-      return `Music: ${Math.round(v * 100)}%`
-    })
-    this.addChild(musicSlider)
-
-    const plantsSlider = new Slider(400 - 150, 200, () => {
-      return core.options.sound_plants
-    }, (v) => {
-        core.options.sound_plants = v
-    }, (v) => {
-      return `Plants: ${Math.round(v * 100)}%`
-    })
-    this.addChild(plantsSlider)
-
-    const zombiesSlider = new Slider(400 - 150, 200 + 40, () => {
-      return core.options.sound_zombies
-    }, (v) => {
-        core.options.sound_zombies = v
-    }, (v) => {
-      return `Zombies: ${Math.round(v * 100)}%`
-    })
-    this.addChild(zombiesSlider)
-
-    const crazy_daveSlider = new Slider(400 - 150, 200 + 80, () => {
-      return core.options.sound_crazy_dave
-    }, (v) => {
-        core.options.sound_crazy_dave = v
-    }, (v) => {
-      return `Crazy Dave: ${Math.round(v * 100)}%`
-    })
-    this.addChild(crazy_daveSlider)
-
-    const btn = new Graphics()
-    btn.position.set(400 - 100, 200 + 150)
-    btn.beginFill(0x333333)
-    btn.drawRect(0, 0, 200, 40)
-    btn.endFill()
-    this.addChild(btn)
-
-    btn.interactive = true
-    btn.buttonMode = true
-
-    btn.on('click', () => {
-      this.parent.removeChild(this)
-      const core = Core.getInstance()
-      core.running = true
-      core.root.interactiveChildren = true
-      this.destroy(true)
-      core.screen = null
-    })
-  }
-}
-
-export default class Core {
+export default class Core extends Container {
   private static instance: Core
   public running: boolean = true
-  public showDebug: boolean = true
+  public showDebug: boolean = false
   public app: Application
   public level: Level | null = null
   public _root: Container
@@ -127,10 +45,16 @@ export default class Core {
   public debugOverlay: DebugOverlay
   public options: Options
   public soundManager: SoundManager
-  public screen: any
+  public screen: null | GUIScreen = null
   public loader: Loader
+  public money: number = 0
+  public achievements = {
+    'sunny_day': 0,
+    'mustache_mode': 0
+  }
 
   public constructor() {
+    super()
     Core.instance = this
 
     this.app = new Application({
@@ -159,7 +83,22 @@ export default class Core {
     this.debugOverlay = new DebugOverlay(this)
     this.root.addChild(this.debugOverlay)
 
+    window.addEventListener('click', (e) => {
+      console.log(e.clientX, e.clientY)
+    })
+
     window.addEventListener('keyup', (e) => {
+      if(e.key === 'F10' && e.ctrlKey) {
+        e.preventDefault()
+
+        this.saveUser()
+      }
+
+      if(e.key === 'F1' && e.ctrlKey) {
+        e.preventDefault()
+        this.level?.saveLevelData()
+      }
+
       if(e.key === 'Escape') {
         if(this.running) {
           this.running = false
@@ -168,13 +107,13 @@ export default class Core {
           this.screen = new OptionsScreen(this)
           this._root.addChild(this.screen)
           this.soundManager.playSound(Sounds.PAUSE)
-          this.level?.saveLevelData()
         } else {
           this.running = true
           this.root.interactiveChildren = true
           // this.app.start()
-          this._root.removeChild(this.screen)
-          this.screen = null
+          // this._root.removeChild(this.screen)
+          // this.screen.destroy()
+          // this.screen = null
         }
       }
     
@@ -189,9 +128,64 @@ export default class Core {
         }
       }
     })
+
+    let s = ''
+    window.addEventListener('keypress', (e) => {
+      if(this.achievements.mustache_mode) return
+      s += e.key
+      console.log(s)
+
+      if(s.length > 0 && !'mustache'.includes(s)) {
+        s = ''
+      }
+
+      if(s === 'mustache') {
+        s = ''
+
+        if(this.achievements.mustache_mode === 0) {
+          this.achievements.mustache_mode = 1
+  
+          this.soundManager.playSound(Sounds.ACHIEVEMENT)
+          const p = this.root.addChild(new Text('Achievement: Mustache Mode'))
+          setTimeout(() => {
+            p.parent.removeChild(this)
+            p.destroy()
+          }, 3000)
+        }
+      }
+    })
+  }
+
+  public setScreen(scrn: null | GUIScreen): void {
+    if(this.screen !== null) {
+      this._root.removeChild(this.screen)
+      this.screen.destroy()
+      this.screen = null
+    }
+
+    this.screen = scrn
+
+    if(this.screen) {
+      this._root.addChild(this.screen)
+    }
   }
 
   public async init(): Promise<void> {
+    const res0 = await (await fetch('static/preloaded_resources.json')).json()
+
+    await new Promise<void>((resolve, reject) => {
+      this.loader.add(Object.entries(res0).map((r: any) => {
+        return {
+          name: r[0],
+          url: r[1]
+        }
+      })).load(() => {
+        resolve()
+      })
+    })
+
+    this.setScreen(new TitleScreen())
+
     const res = await (await fetch('static/resources.json')).json()
 
     await new Promise<void>((resolve, reject) => {
@@ -206,8 +200,10 @@ export default class Core {
     })
 
     await this.soundManager.load()
-    this.level = new Level(this)
-    this.root.addChild(this.level)
+
+    this.setScreen(null)
+
+    this.setScreen(new MainMenuScreen(this))
 
     this.app.ticker.add((dt) => {
       if(this.level && this.running) {
@@ -215,57 +211,29 @@ export default class Core {
         this.debugOverlay.update(dt)
       }
     })
+  }
 
-    class FitWidthButton extends Container {
-      public constructor(x: number, y: number, width: number, text: string, onPress: () => void) {
-        super()
-        
-        this.x = x
-        this.y = y
-        this.width = width
-        this.height = 46
+  public addLevel(): void {
+    this.level = new Level(this)
+    this.root.addChild(this.level)
+    // this.root.addChild(this.level)
 
-        const leftB = Sprite.from('ButtonLeft')
-        const midB = Sprite.from('ButtonMiddle')
-        midB.position.x = leftB.width
-        const rightB = Sprite.from('ButtonRight')
-        rightB.position.x = leftB.width + midB.width
-      
-        this.addChild(leftB)
-        this.addChild(midB)
-        this.addChild(rightB)
+    const cb = this.level.addChild(Sprite.from('CoinBank'))
+    cb.scale.y = 1.2
+    cb.position.set(10, 540)
 
-        this.interactive = true
-        this.on('pointerdown', () => {
-          leftB.texture = Texture.from('ButtonDownLeft')
-          midB.texture = Texture.from('ButtonDownMiddle')
-          rightB.texture = Texture.from('ButtonDownRight')
-        })
+    const a = cb.addChild(new Text('$' + this.money.toString(), {
+      fill: 0x00dd00,
+      fontSize: 16,
+      align: 'right'
+    }))
+    a.position.set(120 - a.width, 8)
 
-        const onPointerUp = () => {
-          leftB.texture = Texture.from('ButtonLeft')
-          midB.texture = Texture.from('ButtonMiddle')
-          rightB.texture = Texture.from('ButtonRight')
-        }
-
-        this.on('pointerup', onPointerUp)
-        this.on('pointerupoutside', onPointerUp)
-
-        const t = new Text(text, {
-          fill: 0x00ff00,
-          fontSize: 22
-        })
-        t.position.x = this.width / 2
-        t.position.y = 8
-        t.anchor.set(0.5, 0)
-
-        this.addChild(t)
-
-        this.on('click', () => {
-          onPress()
-        })
-      }
-    }
+    this.on('addMoney', (count) => {
+      this.money += count
+      a.text = '$' + this.money.toString()
+      a.position.set(120 - a.width, 8)
+    })
 
     const b0 = new FitWidthButton(690, 0, 200, 'Menu', () => {
       this.running = false
@@ -273,12 +241,43 @@ export default class Core {
       this.screen = new OptionsScreen(this)
       this._root.addChild(this.screen)
       this.soundManager.playSound(Sounds.PAUSE)
+      this.level?.shovelBank?.setVisible(false)
     })
-    this._root.addChild(b0)
+    this.level.addChild(b0)
   }
 
   public static getInstance(): Core {
     return Core.instance
+  }
+
+  public saveUser(): void {
+    let writer = new BinaryWriter()
+    writer.writeUint32(14)
+    writer.writeInt32(this.money)
+    Object.values(this.achievements).forEach(v => {
+      writer.writeByte(v)
+    })
+
+    this.download('pvztsuser.dat', writer.finish())
+    // this.loadUser(new BinaryReader(writer.finish()))
+  }
+
+  public loadUser(reader: BinaryReader): void {
+    reader.readInt32()
+    console.log(
+      'money: ' + reader.readInt32(),
+      'sunny_days: ' + reader.readByte(),
+      'mustache_mode: ' + reader.readByte()
+    )
+  }
+
+  public download(filename: string, cont: any): void {
+    let blob = new Blob([cont], {type: ""})
+    let link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blob)
+    let fileName = filename
+    link.download = fileName
+    link.click()
   }
 }
 

@@ -15,6 +15,8 @@ export default class Zombie extends Graphics {
   public zstate: IZombieState
   private target: null | Slot
   public health: number
+  public cold: boolean = false
+  public coldTimer = 0
 
   private hT: Text
 
@@ -44,14 +46,31 @@ export default class Zombie extends Graphics {
     }))
   }
 
+  public setCold(): void {
+    this.cold = true
+    this.coldTimer = 0
+  }
+
   public update(dt: number): void {
+    if(this.cold) {
+      this.coldTimer += dt
+    
+      if(this.coldTimer > 500) {
+        this.cold = false
+        this.coldTimer = 0
+      }
+    }
+
     if(this.health <= 0) {
       const i = this.level.zombies.findIndex(p => p === this)
 
       try {
+        this.level.spawnCoin(this.x, this.y)
+
         this.parent.removeChild(this)
         this.level.zombies[i].destroy()
         this.level.zombies.splice(i, 1)
+
       } catch(e) {}
       return
     }
@@ -71,11 +90,11 @@ export default class Zombie extends Graphics {
         this.zstate = IZombieState.Eat
         this.target = this.level.slots[p]
       }
-      this.position.x += dt * this.velX
+      this.position.x += dt * this.velX * (this.cold ? 0.5 : 1)
     } else if(this.zstate === IZombieState.Eat) {
       if(this.target?.plant) {
 
-        this.target.plant.health -= 1
+        this.target.plant.health -= 0.2
 
         if(this.target.plant.health <= 0) {
           this.target = null

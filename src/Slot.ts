@@ -1,10 +1,11 @@
 import { Graphics } from "pixi.js"
 import Plant from './Plant'
-import { plantsel, Sounds } from "."
+import { Sounds } from "."
 import Level from "./Level"
 import { isDev, MAX_SUN_COUNT } from "./Constants"
 import Wallnut from "./Wallnut"
 import SnowPea from "./SnowPea"
+import Sunflower from "./Sunflower"
 
 export default class Slot extends Graphics {
   private level: Level
@@ -37,19 +38,70 @@ export default class Slot extends Graphics {
         }
         return
       }
-  
-      if(this.level.sunCount < 50) {
-        return
+
+      if(this.level.SeedBank) {
+        if(this.level.SeedBank.selected !== -1) {
+          let cost = 0
+
+          switch(this.level.SeedBank.selected) {
+            case 3:
+              cost = Sunflower.cost
+              break;
+            case 2:
+              cost = Wallnut.cost
+              break;
+            case 1:
+              cost = SnowPea.cost
+              break;
+            case 0:
+              cost = Plant.cost
+              break;
+          
+            default:
+              cost = 10000
+              break;
+          }
+
+          if(this.level.sunCount < cost) {
+            this.level.SeedBank.emit('deselected')
+            return
+          }
+      
+          this.level.emit('subSun', cost)
+
+          let plantG: Plant | undefined
+
+          switch(this.level.SeedBank.selected) {
+            case 3:
+              plantG = new Sunflower(this.level, x, y, r, c)
+              break;
+            case 2:
+              plantG = new Wallnut(this.level, x, y, r, c)
+              break;
+            case 1:
+              plantG = new SnowPea(this.level, x, y, r, c)
+              break;
+            case 0:
+              plantG = new Plant(this.level, x, y, r, c)
+              break;
+          
+            default:
+              break;
+          }
+
+
+          if(plantG) {
+            this.plant = plantG
+            this.addChild(plantG)
+
+            this.level.core.soundManager.playSound(Sounds.PLANT)
+
+            this.level.SeedBank.emit('deselected')
+          } else {
+            this.level.SeedBank.emit('deselected')
+          }
+        }
       }
-  
-      this.level.emit('subSun', 50)
-
-      const plantG = plantsel === 0 ? new Plant(this.level, x, y, r, c) : plantsel === 2 ? new SnowPea(this.level, x, y, r, c) : new Wallnut(this.level, x, y, r, c)
-
-      this.plant = plantG
-      this.addChild(plantG)
-
-      this.level.core.soundManager.playSound(Sounds.PLANT)
     })
   }
 }

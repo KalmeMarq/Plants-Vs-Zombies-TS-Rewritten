@@ -1,7 +1,7 @@
 {
   "name": "pvzts-rewritten",
   "description": "",
-  "version": "0.1.2",
+  "version": "0.2",
   "main": "index.js",
   "license": "MIT",
   "scripts": {

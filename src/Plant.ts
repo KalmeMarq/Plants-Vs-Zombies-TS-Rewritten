@@ -9,6 +9,7 @@ enum IPlantState {
 }
 
 export default class Plant extends Graphics {
+  public static cost: number = 100
   protected level: Level
   public timer: number
   public pstate: IPlantState
@@ -57,9 +58,7 @@ export default class Plant extends Graphics {
           this.pstate = IPlantState.Shoot
           this.timer = 0
 
-        const proj0G = new Projectile(this.level, this.position.x, this.position.y)
-        this.level.projectiles.push(proj0G)
-        this.level.core.root.addChild(proj0G)
+          this.shoot()
         } else {
           this.pstate = IPlantState.StandBy
         }
@@ -79,5 +78,11 @@ export default class Plant extends Graphics {
       this.level.slots.find(s => s.r === this.r && this.c === s.c)!.plant = null
       this.destroy()
     }
+  }
+
+  public shoot(): void {
+    const proj0G = new Projectile(this.level, this.position.x, this.position.y)
+    this.level.projectiles.push(proj0G)
+    this.level.core.root.addChild(proj0G)
   }
 }

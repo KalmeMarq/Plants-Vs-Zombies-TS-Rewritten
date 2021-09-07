@@ -31,5 +31,25 @@
     "sounds": [
       "music/grasswalk_ingame.mp3"
     ]
+  },
+  "ui.earn_achievement": {
+    "sounds": [
+      "achievement.ogg"
+    ]
+  },
+  "ui.coin": {
+    "sounds": [
+      "coin.ogg"
+    ]
+  },
+  "ui.tap": {
+    "sounds": [
+      "tap.ogg"
+    ]
+  },
+  "ui.bleep": {
+    "sounds": [
+      "bleep.ogg"
+    ]
   }
 }

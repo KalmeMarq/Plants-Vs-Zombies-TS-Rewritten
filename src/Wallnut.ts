@@ -3,7 +3,8 @@ import { Sprite } from "@pixi/sprite";
 import Plant from "./Plant";
 
 export default class Wallnut extends Plant {
-  private maxHealth: number = 3000
+  private maxHealth: number = 2000
+  public static cost: number = 50
 
   protected override init(): void {
     this.plantSprite.texture = Texture.from('WallnutBody')
