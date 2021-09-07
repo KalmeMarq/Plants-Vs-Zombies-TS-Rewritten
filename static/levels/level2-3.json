@@ -1,0 +1,14 @@
+{
+  "type": "night",
+  "graves": [
+    {
+      "slot_id": 7
+    },
+    {
+      "slot_id": 17
+    },
+    {
+      "slot_id": 45
+    }
+  ]
+}
