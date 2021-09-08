@@ -56,5 +56,10 @@
     "sounds": [
       "paper.ogg"
     ]
+  },
+  "ui.gravebutton": {
+    "sounds": [
+      "gravebutton.ogg"
+    ]
   }
 }
