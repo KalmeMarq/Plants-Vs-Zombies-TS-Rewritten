@@ -1,4 +1,4 @@
-import Core, { Sounds } from ".."
+import Core, { Logger, Sounds } from ".."
 
 export default class SoundManager {
   private core: Core
@@ -40,7 +40,7 @@ export default class SoundManager {
       } catch(e) {}
     }
 
-    console.log(this.sounds)
-    console.log(Sounds)
+    Logger.info(this.sounds)
+    Logger.info(Sounds)
   }
 }

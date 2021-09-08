@@ -1,5 +1,13 @@
 {
+  "PopCapLogo": "./static/images/PopCap_Logo.jpg",
   "PvZLogo": "./static/temp/PvZ_Logo.jpg",
   "PvZLogoMask": "./static/temp/PvZ_Logo_.png",
-  "TitleScreenBg": "./static/temp/titlescreen.jpg"
+  "TitleScreenBg": "./static/temp/titlescreen.jpg",
+  "_BrianneTod12": "./static/data/_BrianneTod12.png",
+  "_BrianneTod16": "./static/data/_BrianneTod16.png",
+  "_BrianneTod32": "./static/data/_BrianneTod32.png",
+  "_Pico129": "./static/data/_Pico129.png",
+  "_DwarvenTodcraft18Yellow": "./static/data/DwarvenTodcraft18Yellow.png",
+  "_HouseofTerror28": "./static/data/HouseofTerror28.png",
+  "_ContinuumBold14": "./static/data/_ContinuumBold14.gif"
 }

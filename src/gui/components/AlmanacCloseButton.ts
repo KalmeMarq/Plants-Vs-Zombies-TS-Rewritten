@@ -1,5 +1,5 @@
 import { Container, Sprite, Texture, Text } from "pixi.js"
-import Core, { Sounds } from "../.."
+import Core, { Font, FontText, Sounds } from "../.."
 import MainMenuScreen from "../screen/MainMenuScreen"
 import AbstractButton from "./AbstractButton"
 
@@ -12,12 +12,10 @@ export default class AlamanacCloseButton extends AbstractButton {
     })
 
     this.bg = this.addChild(Sprite.from('AlmanacCloseBtn'))
-
-    const t = this.bg.addChild(new Text('Close', {
-      fill: 0x292959,
-      fontSize: 16
-    }))
-    t.position.set(10, 3)
+    
+    const t = this.bg.addChild(new FontText(core.fontManager, Font.BrianneTod16, 'CLOSE', 0x292959))
+    t.setPos(14, 4)
+    t.scale.set(0.8, 0.8)
   }
 
   protected override onMouseOver(): void {

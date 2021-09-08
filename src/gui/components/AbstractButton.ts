@@ -3,6 +3,7 @@ import Core, { Sounds } from "../..";
 
 export default abstract class AbstractButton extends Container {
   protected core: Core
+  protected enabled: boolean = true
 
   public constructor(core: Core, x: number, y: number, onPress: () => void) {
     super()
@@ -15,7 +16,7 @@ export default abstract class AbstractButton extends Container {
     this.buttonMode = true
 
     this.on('click', () => {
-      onPress()
+      if(this.enabled) onPress()
     })
 
     this.on('pointerover', this.onMouseOver)

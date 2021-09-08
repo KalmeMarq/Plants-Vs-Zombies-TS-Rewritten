@@ -4,7 +4,7 @@ import { Graphics } from "@pixi/graphics"
 import { Rectangle } from "@pixi/math"
 import { Sprite } from "@pixi/sprite"
 import { Text } from "@pixi/text"
-import Core, { Sounds } from "."
+import Core, { Font, FontText, Logger, Sounds } from "."
 import BinaryReader from "./binary/BinaryReader"
 import BinaryWriter from "./binary/BinaryWriter"
 import { isDev, MAX_SUN_COUNT } from "./Constants"
@@ -59,7 +59,7 @@ class ShovelBank extends Container {
 
 class SunBank extends Container {
   private level: Level
-  public text: Text
+  public text: FontText
 
   public constructor(level: Level, x: number, y: number) {
     super()
@@ -73,13 +73,18 @@ class SunBank extends Container {
     bg.alpha = 0.0001
     this.addChild(bg)
 
-    this.text = new Text('0', {
-      fill: 0x000000,
-      fontSize: 18
-    })
+    // this.text = new Text('0', {
+    //   fill: 0x000000,
+    //   fontSize: 18
+    // })
 
-    this.text.anchor.set(0.5, 0)
-    this.text.position.set(this.width / 2, 60)
+    // this.text.anchor.set(0.5, 0)
+    // this.text.position.set(this.width / 2, 60)
+
+    this.text = new FontText(level.core.fontManager, Font.ContinuumBold14, '0', 0x000000)
+    this.text.setAnchor(0.5, 0)
+    this.text.setPos(this.width / 2, 60)
+
     this.addChild(this.text)
   }
 }
@@ -89,7 +94,7 @@ class SeedPacket extends Sprite {
   public seedBank: SeedBank
   public selected: boolean = false
 
-  public constructor(index: number, seedBank: SeedBank, sprite: Sprite, cost: number) {
+  public constructor(index: number, seedBank: SeedBank, core: Core, sprite: Sprite, cost: number) {
     super()
     this.seedBank = seedBank
     this.index = index
@@ -110,6 +115,10 @@ class SeedPacket extends Sprite {
         this.select()
       }
     })
+    
+    const t0 = this.addChild(new FontText(core.fontManager, Font.Pico129, cost.toString(), 0x000000))
+    t0.setAnchor(1, 0)
+    t0.setPos(this.width - 19, this.height - t0.height - 3)
   }
 
   public select(): void {
@@ -137,19 +146,19 @@ class SeedBank extends Sprite {
     this.texture = Texture.from('SeedBank')
 
     this.sunBank = new SunBank(level, 0, 0)
-    this.sunBank.text.text = level.sunCount.toString()
+    this.sunBank.text.setText(level.sunCount.toString())
     this.addChild(this.sunBank)
 
-    const s = this.addChild(new SeedPacket(0, this, Sprite.from('PeaShooter'), 100))
+    const s = this.addChild(new SeedPacket(0, this, level.core, Sprite.from('PeaShooter'), 100))
     s.position.set(80, 8)
 
-    const s1 = this.addChild(new SeedPacket(1, this, Sprite.from('SnowPea'), 175))
+    const s1 = this.addChild(new SeedPacket(1, this, level.core, Sprite.from('SnowPea'), 175))
     s1.position.set(80 + 60, 8)
 
-    const s3 = this.addChild(new SeedPacket(3, this, Sprite.from('Sunflower'), 50))
+    const s3 = this.addChild(new SeedPacket(3, this, level.core, Sprite.from('Sunflower'), 50))
     s3.position.set(80 + 60 + 60 + 60, 8)
 
-    const s2 = this.addChild(new SeedPacket(2, this, Sprite.from('WallnutBody'), 50))
+    const s2 = this.addChild(new SeedPacket(2, this, level.core, Sprite.from('WallnutBody'), 50))
     s2.position.set(80 + 60 + 60, 8)
 
     this.packets = [s, s1, s2, s3]
@@ -288,7 +297,7 @@ export default class Level extends Container {
 
     this.on('addSun', (count) => {
       this.sunCount = Math.min(this.sunCount + count, MAX_SUN_COUNT)
-      if(this.SeedBank) this.SeedBank.sunBank.text.text = this.sunCount.toString()
+      if(this.SeedBank) this.SeedBank.sunBank.text.setText(this.sunCount.toString())
 
       if(this.sunCount >= 8000 && this.core.achievements.sunny_day === 0) {
         this.core.achievements.sunny_day = 1
@@ -304,7 +313,7 @@ export default class Level extends Container {
 
     this.on('subSun', (count) => {
       this.sunCount -= count
-      if(this.SeedBank) this.SeedBank.sunBank.text.text = this.sunCount.toString()
+      if(this.SeedBank) this.SeedBank.sunBank.text.setText(this.sunCount.toString())
     })
 
     const bg = this.addChild(Sprite.from('Background1'))
@@ -460,7 +469,7 @@ export default class Level extends Container {
   public loadLevelData(reader: BinaryReader): void {
     reader.readInt32()
 
-    console.log(
+    Logger.info(
       'sunCount: ' + reader.readInt16(),
       'packetSelected: ' + reader.readByte(),
       'suns: ' + Array(reader.readInt16()).fill(0).map(() => {

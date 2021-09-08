@@ -1,5 +1,5 @@
 import { Container, Sprite, Texture, Text } from "pixi.js"
-import Core, { Sounds } from "../.."
+import Core, { Font, FontText, Sounds } from "../.."
 import AlmanacScreen from "../screen/AlmanacScreen"
 import AbstractButton from "./AbstractButton"
 
@@ -13,11 +13,9 @@ export default class AlamanacIndexButton extends AbstractButton {
 
     this.bg = this.addChild(Sprite.from('AlmanacIndexBtn'))
 
-    const t = this.bg.addChild(new Text('Almanac Index', {
-      fill: 0x292959,
-      fontSize: 16
-    }))
-    t.position.set(30, 3)
+    const t = this.bg.addChild(new FontText(core.fontManager, Font.BrianneTod16, 'ALMANAC INDEX', 0x292959))
+    t.setPos(30, 4)
+    t.scale.set(0.8, 0.8)
   }
 
   protected override onMouseOver(): void {

@@ -1,7 +1,7 @@
 import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
 import { Text } from "@pixi/text";
-import Core from "../..";
+import Core, { Font, FontText } from "../..";
 import AlamanacCloseButton from "../components/AlmanacCloseButton";
 import SeedChooserButton from "../components/SeedChooserButton";
 import AlamanacPlantsScreens from "./AlmanacPlantsScreen";
@@ -14,12 +14,16 @@ export default class AlmanacScreen extends GUIScreen {
 
     this.addChild(Sprite.from('AlmanacIndexBack'))
 
-    const title = this.addChild(new Text('Suburban Almanac - Index', {
-      fill: 0xDBDBDB,
-      fontSize: 30
-    }))
-    title.position.set(400, 30)
-    title.anchor.set(0.5, 0)
+    // const title = this.addChild(new Text('Suburban Almanac - Index', {
+    //   fill: 0xDBDBDB,
+    //   fontSize: 30
+    // }))
+    // title.position.set(400, 30)
+    // title.anchor.set(0.5, 0)
+
+    const title = this.addChild(new FontText(core.fontManager, Font.HouseofTerror28, 'Suburban Almanac - Index', 0xDBDBDB))
+    title.setAnchor(0.5, 0)
+    title.setPos(400, 20)
 
     // const l = this.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 80, 80).endFill())
 

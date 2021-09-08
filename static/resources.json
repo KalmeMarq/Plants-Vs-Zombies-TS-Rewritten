@@ -9,6 +9,15 @@
   "SelectorScreen_StartAdventure1": "./static/reanim/SelectorScreen_StartAdventure_Button1.png",
   "SelectorScreen_StartAdventure1Hightlight": "./static/reanim/SelectorScreen_StartAdventure_Highlight.png",
   "SelectorScreen_StartAdventure1Shadow": "./static/reanim/SelectorScreen_Shadow_Adventure.png",
+  "SelectorScreen_Minigames": "./static/reanim/SelectorScreen_Survival_button.png",
+  "SelectorScreen_MinigamesHighlight": "./static/reanim/SelectorScreen_Survival_highlight.png",
+  "SelectorScreen_MinigamesShadow": "./static/reanim/SelectorScreen_Shadow_Survival.png",
+  "SelectorScreen_Puzzle": "./static/reanim/SelectorScreen_Challenges_button.png",
+  "SelectorScreen_PuzzleHighlight": "./static/reanim/SelectorScreen_Challenges_highlight.png",
+  "SelectorScreen_PuzzleShadow": "./static/reanim/SelectorScreen_Shadow_Challenge.png",
+  "SelectorScreen_Survival": "./static/reanim/SelectorScreen_Vasebreaker_button.png",
+  "SelectorScreen_SurvivalHighlight": "./static/reanim/SelectorScreen_vasebreaker_highlight.png",
+  "SelectorScreen_SurvivalShadow": "./static/reanim/SelectorScreen_Shadow_ZenGarden.png",
   "AlmanacCloseBtn": "./static/reanim/Almanac_CloseButton.png",
   "AlmanacCloseBtnHighlight": "./static/images/Almanac_CloseButtonHighlight.png",
   "AlmanacIndexBtnHighlight": "./static/images/Almanac_IndexButtonHighlight.png",
@@ -60,5 +69,6 @@
   "ZombieNoteMask": "./static/images/ZombieNote_.png",
   "ZombieNoteHelp": "./static/images/ZombieNoteHelp.png",
   "ZombieNoteHelpMask": "./static/images/ZombieNoteHelpBlack.png",
-  "SelectorScreenHelp1": "./static/images/SelectorScreen_Help1.png"
+  "SelectorScreenHelp1": "./static/images/SelectorScreen_Help1.png",
+  "SelectorScreenHelp2": "./static/images/SelectorScreen_Help2.png"
 }

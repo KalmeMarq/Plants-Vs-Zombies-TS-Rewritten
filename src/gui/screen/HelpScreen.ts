@@ -1,10 +1,13 @@
+import { Graphics } from "@pixi/graphics";
 import { Sprite } from "@pixi/sprite";
-import Core from "../..";
+import Core, { Sounds } from "../..";
 import SeedChooserButton from "../components/SeedChooserButton";
 import GUIScreen from "./GUIScreen";
 import MainMenuScreen from "./MainMenuScreen";
 
 export default class HelpScreen extends GUIScreen {
+  private overlay: Graphics | undefined
+
   public constructor(core: Core) {
     super()
 
@@ -26,5 +29,22 @@ export default class HelpScreen extends GUIScreen {
     this.addChild(new SeedChooserButton(core, 320, 492, 'Main Menu', () => {
       core.setScreen(new MainMenuScreen(core))
     }))
+
+    core.soundManager.playSound(Sounds.PAPER)
+
+    this.overlay = this.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 800, 600).endFill())
+  }
+
+  public tick(dt: number): void {
+    if(this.overlay) {
+      if(this.overlay?.alpha <= 0) {
+        this.overlay.parent.removeChild(this.overlay)
+        this.overlay.destroy()
+        this.overlay = undefined
+        return
+      } else {
+        this.overlay.alpha -= dt * 0.02
+      }
+    }
   }
 }

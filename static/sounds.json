@@ -51,5 +51,10 @@
     "sounds": [
       "bleep.ogg"
     ]
+  },
+  "ui.paper": {
+    "sounds": [
+      "paper.ogg"
+    ]
   }
 }
