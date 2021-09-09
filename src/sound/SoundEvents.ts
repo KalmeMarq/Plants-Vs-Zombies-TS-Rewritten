@@ -1,4 +1,4 @@
-import SoundEvent from "./SoundEvent";
+import SoundEvent from '@/sound/SoundEvent'
 
 export default class SoundEvents {
   public static SUN_POINTS: SoundEvent = new SoundEvent('ui.sun_points')

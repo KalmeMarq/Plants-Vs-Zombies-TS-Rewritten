@@ -1,4 +1,6 @@
-import Core, { Logger, Sounds } from ".."
+import Core from '@/.'
+import Logger from '@/Logger'
+import Sounds from '@/sound/Sounds'
 
 export default class SoundManager {
   private core: Core
@@ -16,28 +18,27 @@ export default class SoundManager {
 
   public playSound(sound: Sounds, volume?: number): void {
     const s = this.sounds.get(sound.getLocation())
-    if(!s) return
-
+    if (!s) return
 
     const source = this.context.createBufferSource()
     source.buffer = s
     source.connect(this.gainNode)
-    this.gainNode.gain.value = this.core.options.sound_master * (volume ?? 1)
+    this.gainNode.gain.value = this.core.options.soundMaster * (volume ?? 1)
     source.start(0)
   }
 
   public async load(): Promise<void> {
     const sounds = await (await fetch('static/sounds.json')).json()
     const dataSounds = Object.entries<{ sounds: string[] }>(sounds)
-    
-    for(let i = 0; i < dataSounds.length; i++) {
+
+    for (let i = 0; i < dataSounds.length; i++) {
       const [name, data] = dataSounds[i]
 
       try {
         const soundData = await (await fetch(`static/sounds/${data.sounds[0]}`)).arrayBuffer()
         const decoded = await this.context.decodeAudioData(soundData)
         this.sounds.set(name, decoded)
-      } catch(e) {}
+      } catch (e) {}
     }
 
     Logger.info(this.sounds)

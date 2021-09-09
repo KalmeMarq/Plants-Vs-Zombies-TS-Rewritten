@@ -1,14 +1,19 @@
-import { Container, Sprite, Texture, Text } from "pixi.js"
-import Core, { Font, FontText, Sounds } from "../.."
-import AlmanacScreen from "../screen/AlmanacScreen"
-import AbstractButton from "./AbstractButton"
+import Core from '@/.'
+import Font from '@/font/Font'
+import FontText from '@/font/FontText'
+import AbstractButton from '@/gui/components/AbstractButton'
+import AlmanacScreen from '@/gui/screen/AlmanacScreen'
+import MainMenuScreen from '@/gui/screen/MainMenuScreen'
+import { Sprite, Texture } from 'pixi.js'
 
 export default class AlamanacIndexButton extends AbstractButton {
   private bg: Sprite
-  
+
   public constructor(core: Core, x: number, y: number) {
     super(core, x, y, () => {
-      core.setScreen(new AlmanacScreen(core))
+      core.setScreen(new AlmanacScreen(core, () => {
+        core.setScreen(new MainMenuScreen(core))
+      }))
     })
 
     this.bg = this.addChild(Sprite.from('AlmanacIndexBtn'))

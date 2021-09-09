@@ -1,8 +1,15 @@
-import { Sprite } from "@pixi/sprite";
-import { Text } from "@pixi/text";
-import { filters } from "pixi.js";
-import Core, { Font, FontText } from "../..";
-import AbstractButton from "./AbstractButton";
+import Core from '@/.'
+import Font from '@/font/Font'
+import FontText from '@/font/FontText'
+import AbstractButton from '@/gui/components/AbstractButton'
+import { Sprite } from '@pixi/sprite'
+import { filters } from 'pixi.js'
+
+const h = new filters.ColorMatrixFilter()
+h.brightness(1.55, true)
+
+const l = new filters.ColorMatrixFilter()
+l.brightness(1.3, true)
 
 export default class SeedChooserButton extends AbstractButton {
   private bg: Sprite
@@ -14,61 +21,34 @@ export default class SeedChooserButton extends AbstractButton {
 
     this.bg = this.addChild(Sprite.from('SeedChooserButton'))
 
-    // const t = this.bg.addChild(new Text(title, {
-    //   fill: 0xffffff,
-    //   fontSize: 20
-    // }))
-
-    // t.position.set(this.bg.width / 2, this.bg.height / 2)
-    // t.anchor.set(0.5, 0.5)
-
+    this.glow = this.bg.addChild(Sprite.from('SeedChooserButtonGlow'))
+    this.glow.visible = false
     this.text = this.bg.addChild(new FontText(core.fontManager, Font.DwarvenTodcraft18Yellow, title))
     this.text.setAnchor(0.5, 0.5)
     this.text.setPos(this.bg.width / 2, this.bg.height / 2)
-    this.glow = this.bg.addChild(Sprite.from('SeedChooserButtonGlow'))
-    this.glow.visible = false
-
   }
 
   protected override onMouseOver(): void {
     super.onMouseOver()
-    // this.bg.texture = Texture.from('AlmanacCloseBtnHighlight')
     this.glow.visible = true
-    const y = new filters.ColorMatrixFilter()
-    y.matrix = [
-      1, 0, 0, 0, 0.3,
-      0, 1, 0, 0, 0.3,
-      0, 0, 1, 0, 0.3,
-      0, 0, 0, 1, 0 
-    ] as any
-    this.text.filters= [y]
+    this.glow.filters = [l]
+    this.text.filters = [h]
   }
 
   protected override onMouseLeave(): void {
-    // this.bg.texture = Texture.from('AlmanacCloseBtn')
     this.bg.position.set(0, 0)
     this.glow.visible = false
-
-    this.text.filters= []
+    this.glow.filters = []
+    this.text.filters = []
   }
 
   protected override onMouseDown(): void {
     super.onMouseDown()
-    // this.bg.texture = Texture.from('AlmanacCloseBtnHighlight')
     this.bg.position.set(1, 1)
     this.glow.visible = true
-    const y = new filters.ColorMatrixFilter()
-    y.matrix = [
-      1, 0, 0, 0, 0.3,
-      0, 1, 0, 0, 0.3,
-      0, 0, 1, 0, 0.3,
-      0, 0, 0, 1, 0 
-    ] as any
-    this.text.filters= [y]
   }
 
   protected override onMouseRelease(): void {
-    // this.bg.texture = Texture.from('AlmanacCloseBtn')
     this.bg.position.set(0, 0)
   }
 }

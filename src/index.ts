@@ -1,197 +1,32 @@
-import { Application, Container, Loader, Sprite, Texture, Text, BaseTexture, filters, Resource, BaseImageResource, CanvasResource, Rectangle } from 'pixi.js'
-import BinaryReader from './binary/BinaryReader';
-import BinaryWriter from './binary/BinaryWriter';
-import { isDev } from './Constants';
-import { Convert } from './data/Converter';
-import DebugOverlay from './DebugOverlay';
-import FitWidthButton from './gui/components/FitWidthButton';
-import GUIScreen from './gui/screen/GUIScreen';
-import OptionsScreen from './gui/screen/OptionsScreen';
-import SplashScreen from './gui/screen/SplashScreen';
-import Level from './Level';
-import Options from './Options';
-import SoundManager from './sound/SoundManager';
-
-export enum Font {
-  BrianneTod12 = '_BrianneTod12',
-  BrianneTod16 = '_BrianneTod16',
-  BrianneTod32 = '_BrianneTod32',
-  Pico129 = '_Pico129',
-  DwarvenTodcraft18Yellow = '_DwarvenTodcraft18Yellow',
-  HouseofTerror28 = '_HouseofTerror28',
-  ContinuumBold14 = '_ContinuumBold14'
-}
-
-export class Logger {
-  public static info(...text: any[]): void {
-    if(!isDev) return
-    console.log('Info: ', ...text)
-  }
-}
-
-class FontManager {
-  private core: Core
-  public fonts: Map<Font, BaseTexture>
-  public fontsInfo: Map<Font, any>
-
-  public constructor(core: Core) {
-    this.core = core
-    this.fonts = new Map()
-    this.fontsInfo = new Map()
-  }
-
-  public async load(): Promise<void> {
-    const fonts = ['_BrianneTod16', '_BrianneTod12', '_BrianneTod32', '_Pico129', '_DwarvenTodcraft18Yellow', '_HouseofTerror28', '_ContinuumBold14']
-
-    for(let i = 0; i < fonts.length; i++) {
-      
-      const jk = fonts[i] as Font
-      const d = await (await fetch('./static/data/' + jk.replace('_', '') + '.txt')).text()
-      
-      this.fontsInfo.set(jk, Convert.newFontInfo(d))
-      Logger.info(jk, this.fontsInfo.get(jk));
-      if(jk !== '_DwarvenTodcraft18Yellow' && jk !== '_HouseofTerror28') {
-        const si = Sprite.from(jk)
-  
-        const c = document.createElement('canvas')
-        c.width = si.width
-        c.height = si.height
-        const ctx = c.getContext('2d')
-        ctx!.fillStyle = 'white'
-        ctx!.fillRect(0, 0, si.width, si.height)
-  
-        const font = new Sprite(new Texture(new BaseTexture(c)))
-        font.addChild(si)
-        font.mask = si
-
-        const s = this.core.app.renderer.generateTexture(font).baseTexture
-        this.fonts.set(jk as Font, s)
-      } else {
-        const font = Sprite.from(jk)
-        const s = this.core.app.renderer.generateTexture(font).baseTexture
-        this.fonts.set(jk as Font, s)
-      }
-    }
-  }
-
-  public createText(font: Font, str: string, tint: number = 0xffffff) {
-    const m = str.split('')
-
-    const text = new Container()
-    const txr = this.fonts.get(font)!
-
-    for(let i = 0, j = 0; i < m.length; i++) {
-      if(m[i] === ' ') {
-        j += 4
-        continue
-      }
-
-      const info = this.fontsInfo.get(font)[m[i]]
-      Logger.info(m[i], info)
-      const l = new Sprite(new Texture(txr, new Rectangle(info.rect[0], info.rect[1], info.rect[2], info.rect[3])))
-      l.tint = tint
-      l.position.x = j
-      text.addChild(l)
-      j += info.w
-    }
-
-    return text
-  }
-}
-
-export class FontText extends Container {
-  private fontManager: FontManager
-  private t: Container
-  private tsr: string
-  private color: number
-  private font: Font
-  private anchor: [number, number]
-  private abPos: [number, number] = [0, 0]
-
-  public constructor(fontM: FontManager, font: Font, text: string, tint: number = 0xffffff) {
-    super()
-    this.fontManager = fontM
-    this.font = font
-    this.color = tint
-    this.tsr = text
-    this.anchor = [0, 0]
-    this.t = new Container()
-    this.setText(this.tsr)
-    this.addChild(this.t)
-  }
-
-  public setText(text: string, tint?: number) {
-    this.t.removeChildren()
-    this.tsr = text
-    if(tint) this.color = tint
-    
-    const m = this.tsr.split('')
-    const txr = this.fontManager.fonts.get(this.font)!
-
-    for(let i = 0, j = 0; i < m.length; i++) {
-      if(m[i] === ' ') {
-        j += 4
-        continue
-      }
-
-      const info = this.fontManager.fontsInfo.get(this.font)[m[i]]
-      const l = new Sprite(new Texture(txr, new Rectangle(info.rect[0], info.rect[1], info.rect[2], info.rect[3])))
-      l.tint = this.color
-      l.position.x = j
-      this.t.addChild(l)
-      j += info.w
-    }
-
-    this.setPos(this.abPos[0], this.abPos[1])
-  }
-
-  public setColor(tint: number) {
-    this.setText(this.tsr, tint)
-  }
-
-  public setAnchor(x: number, y: number) {
-    this.anchor = [x, y]
-    this.setPos(this.abPos[0], this.abPos[1])
-  }
-
-  public setPos(x: number, y: number) {
-    this.abPos[0] = x
-    this.abPos[1] = y
-    this.x = this.abPos[0] - (this.anchor[0] * this.width)
-    this.y = this.abPos[1] - (this.anchor[1] * this.height)
-  }
-}
-
-export class Sounds {
-  public static SHOVEL_TAP: Sounds = new Sounds('ui.shovel_tap')
-  public static SUN_POINTS: Sounds = new Sounds('ui.sun_points')
-  public static COIN: Sounds = new Sounds('ui.coin')
-  public static TAP: Sounds = new Sounds('ui.tap')
-  public static BLEEP: Sounds = new Sounds('ui.bleep')
-  public static PEA_HIT: Sounds = new Sounds('plant.pea_splat')
-  public static PLANT: Sounds = new Sounds('plant.plant')
-  public static PAUSE: Sounds = new Sounds('ui.pause_game')
-  public static GRASS_WALK: Sounds = new Sounds('music.grasswalk_ingame')
-  public static ACHIEVEMENT: Sounds = new Sounds('ui.earn_achievement')
-  public static PAPER: Sounds = new Sounds('ui.paper')
-
-  private location: string
-  private constructor(location: string) {
-    this.location = location
-  }
-
-  public getLocation(): string {
-    return this.location
-  }
-}
+import { isDev } from '@/Constants'
+import BinaryReader from '@/data/binary/BinaryReader'
+import BinaryWriter from '@/data/binary/BinaryWriter'
+import PvZTexts from '@/data/PvZTexts'
+import TombstoneAtlas from '@/data/TombstoneAtlas'
+import Font from '@/font/Font'
+import FontManager from '@/font/FontManager'
+import FontText from '@/font/FontText'
+import FitWidthButton from '@/gui/components/FitWidthButton'
+import DebugOverlay from '@/gui/DebugOverlay'
+import GUIScreen from '@/gui/screen/GUIScreen'
+import LevelOptionsDialogScreen from '@/gui/screen/LevelOptionsScreen'
+import SplashScreen from '@/gui/screen/SplashScreen'
+import Level from '@/level/Level'
+import Logger from '@/Logger'
+import Options from '@/Options'
+import SoundManager from '@/sound/SoundManager'
+import Sounds from '@/sound/Sounds'
+import User from '@/User'
+import { Application, Container, Loader, Sprite, Text } from 'pixi.js'
 
 export default class Core extends Container {
   private static instance: Core
-  public running: boolean = true
-  public showDebug: boolean = false
+  public running = true
+  public showDebug = false
+  public pvzTexts: PvZTexts
   public app: Application
+  public currentUser: User | null = null
   public level: Level | null = null
-  public _root: Container
   public root: Container
   public debugOverlay: DebugOverlay
   public options: Options
@@ -199,15 +34,19 @@ export default class Core extends Container {
   public fontManager: FontManager
   public screen: null | GUIScreen = null
   public loader: Loader
-  public money: number = 0
+  public tombsAtlas: TombstoneAtlas
   public achievements = {
-    'sunny_day': 0,
-    'mustache_mode': 0
+    sunny_day: 0,
+    mustache_mode: 0
   }
+
+  public dialogScreenStack: GUIScreen[] = []
 
   public constructor() {
     super()
     Core.instance = this
+
+    this.currentUser = new User()
 
     this.app = new Application({
       width: 800,
@@ -217,23 +56,20 @@ export default class Core extends Container {
 
     this.loader = new Loader()
     this.options = new Options()
-    this._root = new Container()
     this.root = new Container()
     this.fontManager = new FontManager(this)
-
+    this.pvzTexts = new PvZTexts()
     this.soundManager = new SoundManager(this)
+    this.tombsAtlas = new TombstoneAtlas(this)
 
-    this.app.renderer.plugins.interaction.cursorStyles.default = 'url("./static/cursor.png"), auto'
-    this.app.renderer.plugins.interaction.cursorStyles.pointer = 'url("./static/cursor_pointer.png"), auto'
-    this.app.renderer.plugins.interaction.cursorStyles.grab = 'url("./static/cursor_grab.png"), auto'
+    this.app.renderer.plugins.interaction.cursorStyles.default = 'url("./static/images/cursor.png"), auto'
+    this.app.renderer.plugins.interaction.cursorStyles.pointer = 'url("./static/images/cursor_pointer.png"), auto'
+    this.app.renderer.plugins.interaction.cursorStyles.grab = 'url("./static/images/cursor_grab.png"), auto'
 
     document.getElementById('root')?.appendChild(this.app.view)
 
     this.root.sortableChildren = true
-    this._root.sortableChildren = true
-    this.root.interactiveChildren = this.running
-    this._root.addChild(this.root)
-    this.app.stage.addChild(this._root)
+    this.app.stage.addChild(this.root)
 
     this.debugOverlay = new DebugOverlay(this)
     this.root.addChild(this.debugOverlay)
@@ -243,38 +79,30 @@ export default class Core extends Container {
     })
 
     window.addEventListener('keyup', (e) => {
-      if(e.key === 'F10' && e.ctrlKey) {
+      if (e.key === 'F10' && e.ctrlKey) {
         e.preventDefault()
 
         this.saveUser()
       }
 
-      if(e.key === 'F1' && e.ctrlKey) {
+      if (e.key === 'F1' && e.ctrlKey) {
         e.preventDefault()
         this.level?.saveLevelData()
       }
 
-      if(e.key === 'Escape') {
-        if(this.running) {
-          this.running = false
-          // this.app.stop()
-          this.root.interactiveChildren = false
-          this.screen = new OptionsScreen(this)
-          this._root.addChild(this.screen)
-          this.soundManager.playSound(Sounds.PAUSE)
-        } else {
-          this.running = true
-          this.root.interactiveChildren = true
-          // this.app.start()
-          // this._root.removeChild(this.screen)
-          // this.screen.destroy()
-          // this.screen = null
+      if (e.key === 'Escape') {
+        if (this.dialogScreenStack.length > 0 && isDev) {
+          this.removeDialog(this.dialogScreenStack[this.dialogScreenStack.length - 1])
+        }
+
+        if (this.level) {
+          this.addDialog(new LevelOptionsDialogScreen(this))
         }
       }
-    
-      if(e.code === 'F2') {
+
+      if (e.code === 'F2') {
         e.preventDefault()
-        if(this.showDebug) {
+        if (this.showDebug) {
           this.showDebug = false
           this.debugOverlay.visible = false
         } else {
@@ -286,20 +114,20 @@ export default class Core extends Container {
 
     let s = ''
     window.addEventListener('keypress', (e) => {
-      if(this.achievements.mustache_mode) return
+      if (this.achievements.mustache_mode) return
       s += e.key
       Logger.info(s)
 
-      if(s.length > 0 && !'mustache'.includes(s)) {
+      if (s.length > 0 && !'mustache'.includes(s)) {
         s = ''
       }
 
-      if(s === 'mustache') {
+      if (s === 'mustache') {
         s = ''
 
-        if(this.achievements.mustache_mode === 0) {
+        if (this.achievements.mustache_mode === 0) {
           this.achievements.mustache_mode = 1
-  
+
           this.soundManager.playSound(Sounds.ACHIEVEMENT)
           const p = this.root.addChild(new Text('Achievement: Mustache Mode'))
           setTimeout(() => {
@@ -311,25 +139,56 @@ export default class Core extends Container {
     })
   }
 
+  public addDialog(dialog: GUIScreen): void {
+    dialog.zIndex = 1000
+    this.root.addChild(dialog)
+    this.dialogScreenStack.push(dialog)
+    this.checkInteractivability()
+  }
+
+  public removeDialog(dialog: GUIScreen): void {
+    this.root.removeChild(dialog)
+    const i = this.dialogScreenStack.findIndex(d => d === dialog)
+    this.dialogScreenStack.splice(i, 1)
+    this.checkInteractivability()
+  }
+
+  public checkInteractivability(): void {
+    if (this.dialogScreenStack.length === 0) {
+      if (this.screen) this.screen.interactiveChildren = true
+      if (this.level) this.level.interactiveChildren = true
+    } else if (this.dialogScreenStack.length > 0) {
+      if (this.screen) this.screen.interactiveChildren = false
+      if (this.level) this.level.interactiveChildren = false
+
+      this.dialogScreenStack.slice(0, this.dialogScreenStack.length - 1).forEach(d => {
+        d.interactiveChildren = false
+      })
+
+      this.dialogScreenStack[this.dialogScreenStack.length - 1].interactiveChildren = true
+    }
+  }
+
   public setScreen(scrn: null | GUIScreen): void {
-    if(this.screen !== null) {
-      this._root.removeChild(this.screen)
+    if (this.screen !== null) {
+      this.root.removeChild(this.screen)
       this.screen.destroy()
       this.screen = null
     }
 
     this.screen = scrn
 
-    if(this.screen) {
-      this._root.addChild(this.screen)
+    if (this.screen) {
+      this.root.addChild(this.screen)
+      this.checkInteractivability()
     }
   }
 
   public async init(): Promise<void> {
     const res0 = await (await fetch('static/preloaded_resources.json')).json()
 
-    await new Promise<void>((resolve, reject) => {
-      this.loader.add(Object.entries(res0).map((r: any) => {
+    await new Promise<void>((resolve) => {
+      this.loader.add(Object.entries<string>(res0).map((r: [string, string]) => {
         return {
           name: r[0],
           url: r[1]
@@ -345,49 +204,39 @@ export default class Core extends Container {
     this.setScreen(new SplashScreen(this))
 
     this.app.ticker.add((dt) => {
-      if(this.screen) {
+      if (this.screen) {
         this.screen.tick(dt)
       }
 
-      if(this.level && this.running) {
+      if (this.level && this.running) {
         this.level.update(dt)
         this.debugOverlay.update(dt)
       }
-    })   
+    })
   }
 
   public addLevel(): void {
     this.level = new Level(this)
     this.root.addChild(this.level)
-    // this.root.addChild(this.level)
 
     const cb = this.level.addChild(Sprite.from('CoinBank'))
     cb.position.set(50, 600 - cb.height - 1)
 
-    // const a = cb.addChild(new Text('$' + this.money.toString(), {
-    //   fill: 0x00dd00,
-    //   fontSize: 16,
-    //   align: 'right'
-    // }))
-    // a.position.set(120 - a.width, 8)
-
-    const b = new FontText(this.fontManager, Font.ContinuumBold14, '$' + this.money.toString(), 0xB3FD59)
+    const b = new FontText(this.fontManager, Font.ContinuumBold14, '$' + this.currentUser?.money.toString() ?? '0', 0xB3FD59)
     b.setAnchor(1, 0)
     b.setPos(123, 6)
     cb.addChild(b)
 
     this.on('addMoney', (count) => {
-      this.money += count
-      b.setText('$' + this.money.toString())
+      if (this.currentUser) {
+        this.currentUser.money += count
+        b.setText('$' + this.currentUser.money.toString())
+      }
     })
 
-    const b0 = new FitWidthButton(690, 0, 200, 'Menu', () => {
-      this.running = false
-      this.root.interactiveChildren = false
-      this.screen = new OptionsScreen(this)
-      this._root.addChild(this.screen)
+    const b0 = new FitWidthButton(682, -12, 118, 'Menu', () => {
+      this.addDialog(new LevelOptionsDialogScreen(this))
       this.soundManager.playSound(Sounds.PAUSE)
-      this.level?.shovelBank?.setVisible(false)
     })
     this.level.addChild(b0)
   }
@@ -397,9 +246,9 @@ export default class Core extends Container {
   }
 
   public saveUser(): void {
-    let writer = new BinaryWriter()
+    const writer = new BinaryWriter()
     writer.writeUint32(14)
-    writer.writeInt32(this.money)
+    writer.writeInt32(this.currentUser!.money)
     Object.values(this.achievements).forEach(v => {
       writer.writeByte(v)
     })
@@ -417,11 +266,11 @@ export default class Core extends Container {
     )
   }
 
-  public download(filename: string, cont: any): void {
-    let blob = new Blob([cont], {type: ""})
-    let link = document.createElement('a')
+  public download(filename: string, cont: Uint8Array | string): void {
+    const blob = new Blob([cont], { type: '' })
+    const link = document.createElement('a')
     link.href = window.URL.createObjectURL(blob)
-    let fileName = filename
+    const fileName = filename
     link.download = fileName
     link.click()
   }

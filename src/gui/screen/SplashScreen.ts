@@ -1,12 +1,12 @@
-import { Graphics } from "@pixi/graphics";
-import { Sprite } from "@pixi/sprite";
-import Core from "../..";
-import GUIScreen from "./GUIScreen";
-import TitleScreen from "./TitleScreen";
+import { Graphics } from '@pixi/graphics'
+import { Sprite } from '@pixi/sprite'
+import Core from '../..'
+import GUIScreen from './GUIScreen'
+import TitleScreen from './TitleScreen'
 
 export default class SplashScreen extends GUIScreen {
   private core: Core
-  private lastTime: number = 0
+  private lastTime = 0
   private logo: Sprite
   public constructor(core: Core) {
     super()
@@ -20,16 +20,16 @@ export default class SplashScreen extends GUIScreen {
   }
 
   public override tick(dt: number): void {
-    if(this.lastTime === 0) {
+    if (this.lastTime === 0) {
       this.lastTime = Date.now()
     }
 
-    if(this.logo.alpha <= 0) {
+    if (this.logo.alpha <= 0) {
       this.core.setScreen(new TitleScreen(this.core))
       return
     }
 
-    if(Date.now() - this.lastTime > 1300) {
+    if (Date.now() - this.lastTime > 1300) {
       this.logo.alpha -= dt * 0.05
     }
   }

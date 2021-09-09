@@ -1,45 +1,34 @@
-import { Graphics } from "@pixi/graphics";
-import { Sprite } from "@pixi/sprite";
-import { Text } from "@pixi/text";
-import Core, { Font, FontText } from "../..";
-import AlamanacCloseButton from "../components/AlmanacCloseButton";
-import SeedChooserButton from "../components/SeedChooserButton";
-import AlamanacPlantsScreens from "./AlmanacPlantsScreen";
-import GUIScreen from "./GUIScreen";
-import MainMenuScreen from "./MainMenuScreen";
+import Core from '@/.'
+import Font from '@/font/Font'
+import FontText from '@/font/FontText'
+import AlamanacCloseButton from '@/gui/components/AlmanacCloseButton'
+import FitWidthButton from '@/gui/components/FitWidthButton'
+import SeedChooserButton from '@/gui/components/SeedChooserButton'
+import AlamanacPlantsScreens from '@/gui/screen/AlmanacPlantsScreen'
+import AlamanacZombiesScreens from '@/gui/screen/AlmanacZombiesScreen'
+import GUIScreen from '@/gui/screen/GUIScreen'
+import { Graphics } from '@pixi/graphics'
+import { Sprite } from '@pixi/sprite'
 
 export default class AlmanacScreen extends GUIScreen {
-  public constructor(core: Core) {
+  public constructor(core: Core, onClose: () => void) {
     super()
 
     this.addChild(Sprite.from('AlmanacIndexBack'))
-
-    // const title = this.addChild(new Text('Suburban Almanac - Index', {
-    //   fill: 0xDBDBDB,
-    //   fontSize: 30
-    // }))
-    // title.position.set(400, 30)
-    // title.anchor.set(0.5, 0)
 
     const title = this.addChild(new FontText(core.fontManager, Font.HouseofTerror28, 'Suburban Almanac - Index', 0xDBDBDB))
     title.setAnchor(0.5, 0)
     title.setPos(400, 20)
 
-    // const l = this.addChild(new Graphics().beginFill(0x000000).drawRect(0, 0, 80, 80).endFill())
-
-    this.addChild(new SeedChooserButton(core, 134, 352, 'View Plants', () => {
+    this.addChild(new SeedChooserButton(core, 134, 342, 'View Plants', () => {
       core.setScreen(new AlamanacPlantsScreens(core))
     }))
 
-    this.addChild(new AlamanacCloseButton(core, 697, 567))
+    this.addChild(new FitWidthButton(486, 342, 210, 'View Zombies', () => {
+      core.setScreen(new AlamanacZombiesScreens(core))
+    }))
 
-    // const clb = this.addChild(Sprite.from('AlmanacCloseBtn'))
-    // clb.position.set(700, 560)
-    // clb.interactive = true
-
-    // clb.on('click', () => {
-    //   core.setScreen(new MainMenuScreen(core))
-    // })
+    this.addChild(new AlamanacCloseButton(core, 697, 567, onClose))
 
     const sf = this.addChild(Sprite.from('Sunflower'))
     sf.position.set(169, 249)

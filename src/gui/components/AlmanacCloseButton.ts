@@ -1,18 +1,20 @@
-import { Container, Sprite, Texture, Text } from "pixi.js"
-import Core, { Font, FontText, Sounds } from "../.."
-import MainMenuScreen from "../screen/MainMenuScreen"
-import AbstractButton from "./AbstractButton"
+import Core from '@/.'
+import Font from '@/font/Font'
+import FontText from '@/font/FontText'
+import AbstractButton from '@/gui/components/AbstractButton'
+import MainMenuScreen from '@/gui/screen/MainMenuScreen'
+import { Sprite, Texture } from 'pixi.js'
 
 export default class AlamanacCloseButton extends AbstractButton {
   private bg: Sprite
-  
-  public constructor(core: Core, x: number, y: number) {
-    super(core, x, y, () => {
+
+  public constructor(core: Core, x: number, y: number, onPress?: () => void) {
+    super(core, x, y, onPress ?? function() {
       core.setScreen(new MainMenuScreen(core))
     })
 
     this.bg = this.addChild(Sprite.from('AlmanacCloseBtn'))
-    
+
     const t = this.bg.addChild(new FontText(core.fontManager, Font.BrianneTod16, 'CLOSE', 0x292959))
     t.setPos(14, 4)
     t.scale.set(0.8, 0.8)

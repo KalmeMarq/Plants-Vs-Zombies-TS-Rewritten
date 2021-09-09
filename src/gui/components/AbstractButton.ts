@@ -1,9 +1,10 @@
-import { Container } from "pixi.js";
-import Core, { Sounds } from "../..";
+import Core from '@/.'
+import Sounds from '@/sound/Sounds'
+import { Container } from 'pixi.js'
 
 export default abstract class AbstractButton extends Container {
   protected core: Core
-  protected enabled: boolean = true
+  protected enabled = true
 
   public constructor(core: Core, x: number, y: number, onPress: () => void) {
     super()
@@ -16,27 +17,42 @@ export default abstract class AbstractButton extends Container {
     this.buttonMode = true
 
     this.on('click', () => {
-      if(this.enabled) onPress()
+      onPress()
     })
 
-    this.on('pointerover', this.onMouseOver)
-    this.on('pointerout', this.onMouseLeave)
-    this.on('pointerdown', this.onMouseDown)
-    this.on('pointerup', this.onMouseRelease)
-    this.on('pointerupoutside', this.onMouseRelease)
+    this.on('pointerover', (e) => {
+      e.stopPropagation()
+      this.onMouseOver()
+    })
+    this.on('pointerout', (e) => {
+      e.stopPropagation()
+      this.onMouseLeave()
+    })
+    this.on('pointerdown', (e) => {
+      e.stopPropagation()
+      this.onMouseDown()
+    })
+    this.on('pointerup', (e) => {
+      e.stopPropagation()
+      this.onMouseRelease()
+    })
+    this.on('pointerupoutside', (e) => {
+      e.stopPropagation()
+      this.onMouseRelease()
+    })
   }
 
   protected onMouseOver(): void {
-    this.core.soundManager.playSound(Sounds.BLEEP)
+    if (this.enabled) {
+      this.core.soundManager.playSound(Sounds.BLEEP)
+    }
   }
 
-  protected onMouseLeave(): void {
-  }
+  protected abstract onMouseLeave(): void
 
   protected onMouseDown(): void {
     this.core.soundManager.playSound(Sounds.TAP)
   }
 
-  protected onMouseRelease(): void {
-  }
+  protected abstract onMouseRelease(): void
 }

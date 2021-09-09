@@ -1,10 +1,12 @@
-import { Container } from "@pixi/display";
+import { Container } from 'pixi.js'
 
-export default class GUIScreen extends Container {
-  public constructor() {
-    super()
-  }
+interface ITickable {
+  tick(dt: number): void
+}
 
-  public tick(dt: number) {
+abstract class GUIScreen extends Container implements ITickable {
+  public tick(dt: number): void {
   }
 }
+
+export default GUIScreen
