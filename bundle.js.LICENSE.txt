@@ -5,14 +5,6 @@ object-assign
 */
 
 /*!
- * @pixi/app - v6.1.2
- * Compiled Thu, 12 Aug 2021 17:11:19 UTC
- *
- * @pixi/app is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-
-/*!
  * @pixi/constants - v6.1.2
  * Compiled Thu, 12 Aug 2021 17:11:19 UTC
  *
@@ -49,14 +41,6 @@ object-assign
  * Compiled Thu, 12 Aug 2021 17:11:19 UTC
  *
  * @pixi/filter-displacement is licensed under the MIT License.
- * http://www.opensource.org/licenses/mit-license
- */
-
-/*!
- * @pixi/math - v6.1.2
- * Compiled Thu, 12 Aug 2021 17:11:19 UTC
- *
- * @pixi/math is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 
@@ -101,18 +85,26 @@ object-assign
  */
 
 /*!
- * @pixi/ticker - v6.1.2
+ * @pixi/runner - v6.1.2
  * Compiled Thu, 12 Aug 2021 17:11:19 UTC
  *
- * @pixi/ticker is licensed under the MIT License.
+ * @pixi/runner is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 
 /*!
- * @pixi/utils - v6.1.2
+ * @pixi/sprite - v6.1.2
  * Compiled Thu, 12 Aug 2021 17:11:19 UTC
  *
- * @pixi/utils is licensed under the MIT License.
+ * @pixi/sprite is licensed under the MIT License.
+ * http://www.opensource.org/licenses/mit-license
+ */
+
+/*!
+ * @pixi/ticker - v6.1.2
+ * Compiled Thu, 12 Aug 2021 17:11:19 UTC
+ *
+ * @pixi/ticker is licensed under the MIT License.
  * http://www.opensource.org/licenses/mit-license
  */
 
