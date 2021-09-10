@@ -84,9 +84,10 @@ export default class Users {
 
   public createUser(name?: string): void {
     const d = Array.from(this.users.entries())
-    const id = d[d.length - 1][1].id + 1
+    const id = d.length === 0 ? 0 : d[d.length - 1][1].id + 1
 
     const user = new User(id, name ?? 'Player' + (id))
+    user.save()
     this.users.set(id, user)
     this.numOfUsers++
 
