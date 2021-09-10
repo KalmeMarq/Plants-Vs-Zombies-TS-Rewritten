@@ -26,7 +26,6 @@ export default class Options {
     this.soundPlants = data.sound_plants
     this.soundZombies = data.sound_zombies
     this.soundCrazyDave = data.sound_crazy_dave
-    this.fullscreen = data.fullscreen
   }
 
   public save(): void {
@@ -35,8 +34,7 @@ export default class Options {
       sound_music: this.soundMusic,
       sound_plants: this.soundPlants,
       sound_zombies: this.soundZombies,
-      sound_crazy_dave: this.soundCrazyDave,
-      fullscreen: this.fullscreen
+      sound_crazy_dave: this.soundCrazyDave
     }
 
     localStorage.setItem('options', JSON.stringify(data))

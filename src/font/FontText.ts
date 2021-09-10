@@ -1,34 +1,38 @@
+import Core from '@/.'
 import Font from '@/font/Font'
 import FontManager from '@/font/FontManager'
+import LawnText from '@/font/LawnText'
 import { Texture } from '@pixi/core'
 import { Container } from '@pixi/display'
 import { Rectangle } from '@pixi/math'
 import { Sprite } from 'pixi.js'
 
 export default class FontText extends Container {
+  private core: Core
   private fontManager: FontManager
   private t: Container
-  private tsr: string
+  private tsr = ''
   private color: number
   private font: Font
   private anchor: [number, number]
   private abPos: [number, number] = [0, 0]
 
-  public constructor (fontM: FontManager, font: Font, text: string, tint = 0xffffff) {
+  public constructor (fontM: FontManager, font: Font, text: string | LawnText, tint = 0xffffff) {
     super()
+    this.core = Core.getInstance()
     this.fontManager = fontM
     this.font = font
     this.color = tint
-    this.tsr = text
     this.anchor = [0, 0]
     this.t = new Container()
-    this.setText(this.tsr)
+    this.setText(text)
     this.addChild(this.t)
   }
 
-  public setText (text: string, tint?: number): void {
+  public setText (text: string | LawnText, tint?: number): void {
     this.t.removeChildren()
-    this.tsr = text
+    this.tsr = typeof text === 'string' ? text : text.getFinal(this.core)
+
     if (tint) this.color = tint
 
     const m = this.tsr.split('')
@@ -41,17 +45,18 @@ export default class FontText extends Container {
     if (!fontInfo) return
 
     for (let i = 0, j = 0; i < m.length; i++) {
+      const info = fontInfo[m[i]]
+
       if (m[i] === ' ') {
-        j += 4
+        j += info.width
         continue
       }
 
-      const info = fontInfo[m[i]]
       const l = new Sprite(new Texture(txr, new Rectangle(info.rect[0], info.rect[1], info.rect[2], info.rect[3])))
       l.tint = this.color
       l.position.x = j
       this.t.addChild(l)
-      j += info.w
+      j += info.width
     }
 
     this.setPos(this.abPos[0], this.abPos[1])

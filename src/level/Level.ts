@@ -91,15 +91,18 @@ export default class Level extends Container {
       this.sunCount = Math.min(this.sunCount + count, MAX_SUN_COUNT)
       if (this.SeedBank) this.SeedBank.sunBank.text.setText(this.sunCount.toString())
 
-      if (this.sunCount >= 8000 && this.core.achievements.sunny_day === 0) {
-        this.core.achievements.sunny_day = 1
+      if (this.core.users.currentUser) {
+        if (this.sunCount >= 8000 && this.core.users.currentUser.achievements.sunny_day === 0) {
+          this.core.users.currentUser.achievements.sunny_day = 1
+          this.emit('saveUser', this.core.users.currentUser)
 
-        this.core.soundManager.playSound(Sounds.ACHIEVEMENT)
-        const p = this.core.root.addChild(new Text('Achievement: Sunny day'))
-        setTimeout(() => {
-          p.parent.removeChild(this)
-          p.destroy()
-        }, 3000)
+          this.core.soundManager.playSound(Sounds.ACHIEVEMENT)
+          const p = this.core.root.addChild(new Text('Achievement: Sunny day'))
+          setTimeout(() => {
+            p.parent.removeChild(this)
+            p.destroy()
+          }, 3000)
+        }
       }
     })
 

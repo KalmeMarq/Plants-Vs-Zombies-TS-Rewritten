@@ -1,6 +1,7 @@
 import Core from '@/.'
 import Font from '@/font/Font'
 import FontText from '@/font/FontText'
+import LawnText from '@/font/LawnText'
 import Sounds from '@/sound/Sounds'
 import { Container, filters, Sprite, Texture, TilingSprite } from 'pixi.js'
 
@@ -8,7 +9,7 @@ const h = new filters.ColorMatrixFilter()
 h.brightness(1.3, true)
 
 export default class FitWidthButton extends Container {
-  public constructor(x: number, y: number, width: number, text: string, onPress: () => void) {
+  public constructor(x: number, y: number, width: number, text: string | LawnText, onPress: () => void) {
     super()
 
     this.x = x

@@ -1,0 +1,809 @@
+properties:
+  ascent: 15
+  pointSize: 12
+  mask: false
+chars:
+  '0':
+    width: 8
+    offset: [-3, 0]
+    rect: [813, 0, 14, 21]
+
+  '1':
+    width: 5
+    offset: [-3, 0]
+    rect: [828, 0, 11, 21]
+
+  '2':
+    width: 8
+    offset: [-3, 0]
+    rect: [840, 0, 14, 21]
+
+  '3':
+    width: 8
+    offset: [-3, 0]
+    rect: [855, 0, 13, 21]
+
+  '4':
+    width: 9
+    offset: [-3, 0]
+    rect: [869, 0, 15, 21]
+
+  '5':
+    width: 8
+    offset: [-3, 0]
+    rect: [885, 0, 14, 21]
+
+  '6':
+    width: 8
+    offset: [-3, 0]
+    rect: [900, 0, 14, 21]
+
+  '7':
+    width: 9
+    offset: [-3, 0]
+    rect: [915, 0, 14, 21]
+
+  '8':
+    width: 8
+    offset: [-3, 0]
+    rect: [930, 0, 14, 21]
+
+  '9':
+    width: 8
+    offset: [-3, 0]
+    rect: [945, 0, 14, 21]
+
+  'A':
+    width: 11
+    offset: [-3, 0]
+    rect: [0, 0, 17, 21]
+
+  'B':
+    width: 9
+    offset: [-3, 0]
+    rect: [18, 0, 15, 21]
+
+  'C':
+    width: 10
+    offset: [-3, 0]
+    rect: [34, 0, 15, 21]
+
+  'D':
+    width: 9
+    offset: [-3, 0]
+    rect: [50, 0, 15, 21]
+
+  'E':
+    width: 9
+    offset: [-3, 0]
+    rect: [66, 0, 14, 21]
+
+  'F':
+    width: 8
+    offset: [-3, 0]
+    rect: [81, 0, 14, 21]
+
+  'G':
+    width: 10
+    offset: [-3, 0]
+    rect: [96, 0, 16, 21]
+
+  'H':
+    width: 11
+    offset: [-3, 0]
+    rect: [113, 0, 17, 21]
+
+  'I':
+    width: 6
+    offset: [-3, 0]
+    rect: [131, 0, 11, 21]
+
+  'J':
+    width: 6
+    offset: [-3, 0]
+    rect: [143, 0, 11, 21]
+
+  'K':
+    width: 10
+    offset: [-3, 0]
+    rect: [155, 0, 16, 21]
+
+  'L':
+    width: 8
+    offset: [-3, 0]
+    rect: [172, 0, 14, 21]
+
+  'M':
+    width: 15
+    offset: [-3, 0]
+    rect: [187, 0, 20, 21]
+
+  'N':
+    width: 12
+    offset: [-3, 0]
+    rect: [208, 0, 17, 21]
+
+  'O':
+    width: 11
+    offset: [-3, 0]
+    rect: [226, 0, 16, 21]
+
+  'P':
+    width: 9
+    offset: [-3, 0]
+    rect: [243, 0, 15, 21]
+
+  'Q':
+    width: 11
+    offset: [-3, 0]
+    rect: [259, 0, 17, 21]
+
+  'R':
+    width: 10
+    offset: [-3, 0]
+    rect: [277, 0, 16, 21]
+
+  'S':
+    width: 7
+    offset: [-3, 0]
+    rect: [294, 0, 13, 21]
+
+  'T':
+    width: 10
+    offset: [-3, 0]
+    rect: [308, 0, 16, 21]
+
+  'U':
+    width: 11
+    offset: [-3, 0]
+    rect: [325, 0, 17, 21]
+
+  'V':
+    width: 11
+    offset: [-3, 0]
+    rect: [343, 0, 17, 21]
+
+  'W':
+    width: 16
+    offset: [-3, 0]
+    rect: [361, 0, 21, 21]
+
+  'X':
+    width: 13
+    offset: [-2, 0]
+    rect: [383, 0, 18, 21]
+
+  'Y':
+    width: 11
+    offset: [-3, 0]
+    rect: [402, 0, 18, 21]
+
+  'Z':
+    width: 10
+    offset: [-3, 0]
+    rect: [421, 0, 15, 21]
+
+  'a':
+    width: 8
+    offset: [-3, 0]
+    rect: [437, 0, 14, 21]
+
+  'b':
+    width: 7
+    offset: [-3, 0]
+    rect: [452, 0, 13, 21]
+
+  'c':
+    width: 7
+    offset: [-3, 0]
+    rect: [466, 0, 13, 21]
+
+  'd':
+    width: 7
+    offset: [-3, 0]
+    rect: [480, 0, 13, 21]
+
+  'e':
+    width: 6
+    offset: [-3, 0]
+    rect: [494, 0, 12, 21]
+
+  'f':
+    width: 6
+    offset: [-3, 0]
+    rect: [507, 0, 12, 21]
+
+  'g':
+    width: 8
+    offset: [-3, 0]
+    rect: [520, 0, 14, 21]
+
+  'h':
+    width: 8
+    offset: [-3, 0]
+    rect: [535, 0, 14, 21]
+
+  'i':
+    width: 4
+    offset: [-3, 0]
+    rect: [550, 0, 10, 21]
+
+  'j':
+    width: 4
+    offset: [-3, 0]
+    rect: [561, 0, 10, 21]
+
+  'k':
+    width: 8
+    offset: [-3, 0]
+    rect: [572, 0, 13, 21]
+
+  'l':
+    width: 6
+    offset: [-3, 0]
+    rect: [586, 0, 12, 21]
+
+  'm':
+    width: 11
+    offset: [-3, 0]
+    rect: [599, 0, 17, 21]
+
+  'n':
+    width: 8
+    offset: [-3, 0]
+    rect: [617, 0, 14, 21]
+
+  'o':
+    width: 8
+    offset: [-3, 0]
+    rect: [632, 0, 14, 21]
+
+  'p':
+    width: 7
+    offset: [-3, 0]
+    rect: [647, 0, 12, 21]
+
+  'q':
+    width: 10
+    offset: [-3, 0]
+    rect: [660, 0, 15, 21]
+
+  'r':
+    width: 8
+    offset: [-3, 0]
+    rect: [676, 0, 14, 21]
+
+  's':
+    width: 6
+    offset: [-3, 0]
+    rect: [691, 0, 12, 21]
+
+  't':
+    width: 8
+    offset: [-3, 0]
+    rect: [704, 0, 13, 21]
+
+  'u':
+    width: 8
+    offset: [-3, 0]
+    rect: [718, 0, 14, 21]
+
+  'v':
+    width: 8
+    offset: [-3, 0]
+    rect: [733, 0, 14, 21]
+
+  'w':
+    width: 12
+    offset: [-3, 0]
+    rect: [748, 0, 18, 21]
+
+  'x':
+    width: 10
+    offset: [-3, 0]
+    rect: [767, 0, 15, 21]
+
+  'y':
+    width: 9
+    offset: [-3, 0]
+    rect: [783, 0, 15, 21]
+
+  'z':
+    width: 7
+    offset: [-3, 0]
+    rect: [799, 0, 13, 21]
+
+  '~':
+    width: 8
+    offset: [-3, 0]
+    rect: [960, 0, 14, 21]
+
+  '`':
+    width: 3
+    offset: [-4, 0]
+    rect: [975, 0, 10, 21]
+
+  '!':
+    width: 4
+    offset: [-3, 0]
+    rect: [986, 0, 9, 21]
+
+  '@':
+    width: 12
+    offset: [-2, 0]
+    rect: [996, 0, 16, 21]
+
+  '#':
+    width: 7
+    offset: [-3, 0]
+    rect: [1013, 0, 14, 21]
+
+  '$':
+    width: 6
+    offset: [-3, 0]
+    rect: [1028, 0, 12, 21]
+
+  '%':
+    width: 8
+    offset: [-3, 0]
+    rect: [1041, 0, 14, 21]
+
+  '^':
+    width: 5
+    offset: [-3, 0]
+    rect: [1056, 0, 10, 21]
+
+  '&':
+    width: 7
+    offset: [-3, 0]
+    rect: [1067, 0, 13, 21]
+
+  '*':
+    width: 5
+    offset: [-3, 0]
+    rect: [1081, 0, 11, 21]
+
+  '(':
+    width: 4
+    offset: [-3, 0]
+    rect: [1093, 0, 10, 21]
+
+  ')':
+    width: 4
+    offset: [-3, 0]
+    rect: [1104, 0, 10, 21]
+
+  '-':
+    width: 6
+    offset: [-3, 0]
+    rect: [1115, 0, 12, 21]
+
+  '_':
+    width: 5
+    offset: [-3, 0]
+    rect: [1128, 0, 12, 21]
+
+  '=':
+    width: 7
+    offset: [-3, 0]
+    rect: [1141, 0, 13, 21]
+
+  '+':
+    width: 6
+    offset: [-3, 0]
+    rect: [1155, 0, 13, 21]
+
+  '[':
+    width: 4
+    offset: [-3, 0]
+    rect: [1169, 0, 10, 21]
+
+  '{':
+    width: 5
+    offset: [-3, 0]
+    rect: [1180, 0, 11, 21]
+
+  ']':
+    width: 4
+    offset: [-3, 0]
+    rect: [1192, 0, 10, 21]
+
+  '}':
+    width: 5
+    offset: [-3, 0]
+    rect: [1203, 0, 11, 21]
+
+  ';':
+    width: 4
+    offset: [-3, 0]
+    rect: [1215, 0, 10, 21]
+
+  ':':
+    width: 4
+    offset: [-3, 0]
+    rect: [1226, 0, 9, 21]
+
+  "'":
+    width: 3
+    offset: [-4, 0]
+    rect: [1236, 0, 10, 21]
+
+  '"':
+    width: 11
+    offset: [-5, 0]
+    rect: [1247, 0, 21, 21]
+
+  ',':
+    width: 4
+    offset: [-3, 0]
+    rect: [1269, 0, 10, 21]
+
+  '<':
+    width: 6
+    offset: [-3, 0]
+    rect: [1280, 0, 12, 21]
+
+  '.':
+    width: 4
+    offset: [-3, 0]
+    rect: [1293, 0, 9, 21]
+
+  '>':
+    width: 6
+    offset: [-3, 0]
+    rect: [1303, 0, 12, 21]
+
+  '/':
+    width: 6
+    offset: [-3, 0]
+    rect: [1316, 0, 13, 21]
+
+  '?':
+    width: 6
+    offset: [-3, 0]
+    rect: [1330, 0, 12, 21]
+
+  '¡':
+    width: 4
+    offset: [-3, 0]
+    rect: [1343, 0, 9, 21]
+
+  '¢':
+    width: 7
+    offset: [-3, 0]
+    rect: [1353, 0, 13, 21]
+
+  '£':
+    width: 6
+    offset: [-3, 0]
+    rect: [1367, 0, 13, 21]
+
+  '¥':
+    width: 7
+    offset: [-4, 0]
+    rect: [1381, 0, 14, 21]
+
+  '§':
+    width: 5
+    offset: [-3, 0]
+    rect: [1396, 0, 11, 21]
+
+  '©':
+    width: 9
+    offset: [-3, 0]
+    rect: [1408, 0, 14, 21]
+
+  '®':
+    width: 8
+    offset: [-3, 0]
+    rect: [1423, 0, 14, 21]
+
+  '¿':
+    width: 7
+    offset: [-3, 0]
+    rect: [1438, 0, 12, 21]
+
+  'À':
+    width: 11
+    offset: [-3, 0]
+    rect: [1451, 0, 17, 21]
+
+  'Á':
+    width: 11
+    offset: [-3, 0]
+    rect: [1469, 0, 17, 21]
+
+  'Â':
+    width: 11
+    offset: [-3, 0]
+    rect: [1487, 0, 17, 21]
+
+  'Ã':
+    width: 11
+    offset: [-3, 0]
+    rect: [1505, 0, 17, 21]
+
+  'Ä':
+    width: 11
+    offset: [-3, 0]
+    rect: [1523, 0, 17, 21]
+
+  'Å':
+    width: 11
+    offset: [-3, 0]
+    rect: [1541, 0, 17, 21]
+
+  'Æ':
+    width: 13
+    offset: [-3, 0]
+    rect: [1559, 0, 19, 21]
+
+  'Ç':
+    width: 5
+    offset: [-4, 0]
+    rect: [1579, 0, 13, 21]
+
+  'È':
+    width: 9
+    offset: [-3, 0]
+    rect: [1593, 0, 14, 21]
+
+  'É':
+    width: 9
+    offset: [-3, 0]
+    rect: [1608, 0, 14, 21]
+
+  'Ê':
+    width: 9
+    offset: [-3, 0]
+    rect: [1623, 0, 14, 21]
+
+  'Ë':
+    width: 9
+    offset: [-3, 0]
+    rect: [1638, 0, 14, 21]
+
+  'Ì':
+    width: 6
+    offset: [-3, 0]
+    rect: [1653, 0, 11, 21]
+
+  'Í':
+    width: 6
+    offset: [-3, 0]
+    rect: [1665, 0, 11, 21]
+
+  'Î':
+    width: 6
+    offset: [-3, 0]
+    rect: [1677, 0, 11, 21]
+
+  'Ï':
+    width: 6
+    offset: [-3, 0]
+    rect: [1689, 0, 11, 21]
+
+  'Ð':
+    width: 9
+    offset: [-3, 0]
+    rect: [1701, 0, 15, 21]
+
+  'Ñ':
+    width: 12
+    offset: [-3, 0]
+    rect: [1717, 0, 17, 21]
+
+  'Ò':
+    width: 11
+    offset: [-3, 0]
+    rect: [1735, 0, 16, 21]
+
+  'Ó':
+    width: 11
+    offset: [-3, 0]
+    rect: [1752, 0, 16, 21]
+
+  'Ô':
+    width: 11
+    offset: [-3, 0]
+    rect: [1769, 0, 16, 21]
+
+  'Õ':
+    width: 11
+    offset: [-3, 0]
+    rect: [1786, 0, 16, 21]
+
+  'Ö':
+    width: 11
+    offset: [-3, 0]
+    rect: [1803, 0, 16, 21]
+
+  'Ø':
+    width: 11
+    offset: [-3, 0]
+    rect: [1820, 0, 16, 21]
+
+  'Ù':
+    width: 11
+    offset: [-3, 0]
+    rect: [1837, 0, 17, 21]
+
+  'Ú':
+    width: 11
+    offset: [-3, 0]
+    rect: [1855, 0, 17, 21]
+
+  'Û':
+    width: 11
+    offset: [-3, 0]
+    rect: [1873, 0, 17, 21]
+
+  'Ü':
+    width: 11
+    offset: [-3, 0]
+    rect: [1891, 0, 17, 21]
+
+  'Ý':
+    width: 11
+    offset: [-3, 0]
+    rect: [1909, 0, 18, 21]
+
+  'ß':
+    width: 7
+    offset: [-3, 0]
+    rect: [1928, 0, 13, 21]
+
+  'à':
+    width: 8
+    offset: [-3, 0]
+    rect: [1942, 0, 14, 21]
+
+  'á':
+    width: 8
+    offset: [-3, 0]
+    rect: [1957, 0, 14, 21]
+
+  'â':
+    width: 8
+    offset: [-3, 0]
+    rect: [1972, 0, 14, 21]
+
+  'ã':
+    width: 8
+    offset: [-3, 0]
+    rect: [1987, 0, 14, 21]
+
+  'ä':
+    width: 11
+    offset: [-3, 0]
+    rect: [2002, 0, 17, 21]
+
+  'å':
+    width: 11
+    offset: [-3, 0]
+    rect: [2020, 0, 17, 21]
+
+  'æ':
+    width: 13
+    offset: [-3, 0]
+    rect: [2038, 0, 19, 21]
+
+  'ç':
+    width: 6
+    offset: [-3, 0]
+    rect: [2058, 0, 11, 21]
+
+  'è':
+    width: 6
+    offset: [-3, 0]
+    rect: [2070, 0, 12, 21]
+
+  'é':
+    width: 6
+    offset: [-3, 0]
+    rect: [2083, 0, 12, 21]
+
+  'ê':
+    width: 6
+    offset: [-3, 0]
+    rect: [2096, 0, 12, 21]
+
+  'ë':
+    width: 6
+    offset: [-3, 0]
+    rect: [2109, 0, 12, 21]
+
+  'ì':
+    width: 4
+    offset: [-3, 0]
+    rect: [2122, 0, 10, 21]
+
+  'í':
+    width: 4
+    offset: [-3, 0]
+    rect: [2133, 0, 10, 21]
+
+  'î':
+    width: 4
+    offset: [-3, 0]
+    rect: [2144, 0, 10, 21]
+
+  'ï':
+    width: 5
+    offset: [-3, 0]
+    rect: [2155, 0, 11, 21]
+
+  'ð':
+    width: 8
+    offset: [-3, 0]
+    rect: [2167, 0, 14, 21]
+
+  'ñ':
+    width: 8
+    offset: [-3, 0]
+    rect: [2182, 0, 14, 21]
+
+  'ò':
+    width: 8
+    offset: [-3, 0]
+    rect: [2197, 0, 14, 21]
+
+  'ó':
+    width: 8
+    offset: [-3, 0]
+    rect: [2212, 0, 14, 21]
+
+  'ô':
+    width: 8
+    offset: [-3, 0]
+    rect: [2227, 0, 14, 21]
+
+  'õ':
+    width: 8
+    offset: [-3, 0]
+    rect: [2242, 0, 14, 21]
+
+  'ö':
+    width: 11
+    offset: [-3, 0]
+    rect: [2257, 0, 16, 21]
+
+  'ø':
+    width: 8
+    offset: [-3, 0]
+    rect: [2274, 0, 14, 21]
+
+  'ù':
+    width: 8
+    offset: [-3, 0]
+    rect: [2289, 0, 14, 21]
+
+  'ú':
+    width: 8
+    offset: [-3, 0]
+    rect: [2304, 0, 14, 21]
+
+  'û':
+    width: 8
+    offset: [-3, 0]
+    rect: [2319, 0, 14, 21]
+
+  'ü':
+    width: 8
+    offset: [-3, 0]
+    rect: [2334, 0, 14, 21]
+
+  'ý':
+    width: 8
+    offset: [-3, 0]
+    rect: [2349, 0, 15, 21]
+
+  'ÿ':
+    width: 8
+    offset: [-3, 0]
+    rect: [2365, 0, 15, 21]
+
+  ' ':
+    width: 7
+    offset: [0, 0]
+    rect: [0, 0, 0, 0]

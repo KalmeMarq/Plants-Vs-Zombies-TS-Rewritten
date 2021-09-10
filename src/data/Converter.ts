@@ -1,3 +1,5 @@
+import Font from '@/font/Font'
+
 export type IPVZTexts = {
   [key: string]: string[]
 }
@@ -326,7 +328,7 @@ export default class Convert {
     return obj
   }
 
-  public static newFontInfo(str: string): INewPVZFont {
+  public static newFontInfo(s: Font, str: string): INewPVZFont {
     const oldFontInfoFormat = this.oldfontInfo(str)
 
     const newFontInfoFormat: { [key: string]: { w: number, offset: [number, number], rect: [number, number, number, number] } } = {}
@@ -338,6 +340,33 @@ export default class Convert {
       }
     })
 
+    let a = ''
+
+    Object.entries(newFontInfoFormat).forEach(([key, value]) => {
+      a += '\'' + key + '\':\n'
+      a += '  width: ' + value.w + '\n'
+      a += '  offset: [' + value.offset + ']\n'
+      a += '  rect: [' + value.rect + ']\n'
+      a += '\n'
+    })
+
     return newFontInfoFormat
+  }
+
+  /** @test */
+  public static t0(jk: Font, str: string): string {
+    const j = this.newFontInfo(jk, str)
+
+    let a = ''
+
+    Object.entries(j).forEach(([key, value]) => {
+      a += '\'' + key + '\':\n'
+      a += '  width: ' + value.w + '\n'
+      a += '  offset: [' + value.offset + ']\n'
+      a += '  rect: [' + value.rect + ']\n'
+      a += '\n'
+    })
+
+    return a
   }
 }

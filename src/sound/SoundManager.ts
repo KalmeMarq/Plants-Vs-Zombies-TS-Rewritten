@@ -1,6 +1,7 @@
 import Core from '@/.'
 import Logger from '@/Logger'
 import Sounds from '@/sound/Sounds'
+import { parse as parseYAML } from 'yaml'
 
 export default class SoundManager {
   private core: Core
@@ -28,7 +29,7 @@ export default class SoundManager {
   }
 
   public async load(): Promise<void> {
-    const sounds = await (await fetch('static/sounds.json')).json()
+    const sounds = parseYAML(await (await fetch('static/sounds/sounds.yaml')).text())
     const dataSounds = Object.entries<{ sounds: string[] }>(sounds)
 
     for (let i = 0; i < dataSounds.length; i++) {

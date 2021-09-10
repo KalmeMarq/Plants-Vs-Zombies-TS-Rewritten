@@ -23,7 +23,10 @@ export default class ZombatarLADialogScreen extends DialogScreen {
 
     this.back.addChild(new ZombatarTOSButton(core, 454, 346, 'zombatar_accept_button', 'zombatar_accept_button_highlight', () => {
       if (agreeCheck.checked) {
-        if (core.currentUser) core.currentUser.agreedZombatarTOS = true
+        if (core.users.currentUser) {
+          core.users.currentUser.agreedZombatarTOS = true
+          this.core.emit('saveUser', core.users.currentUser)
+        }
         core.removeDialog(this)
       }
     }))

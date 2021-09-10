@@ -1,6 +1,7 @@
 import Core from '@/.'
 import Font from '@/font/Font'
 import FontText from '@/font/FontText'
+import LawnText from '@/font/LawnText'
 import AbstractButton from '@/gui/components/AbstractButton'
 import { Sprite, Texture } from 'pixi.js'
 
@@ -8,7 +9,7 @@ export default class DialogQuitButton extends AbstractButton {
   private bg: Sprite
   public msg: FontText
 
-  public constructor(core: Core, x: number, y: number, title: string, onPress: () => void) {
+  public constructor(core: Core, x: number, y: number, title: string | LawnText, onPress: () => void) {
     super(core, x, y, onPress)
 
     this.bg = this.addChild(Sprite.from('options_backtogamebutton0'))

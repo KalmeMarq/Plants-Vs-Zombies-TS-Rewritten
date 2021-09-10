@@ -1,7 +1,7 @@
 {
   "name": "pvzts-rewritten",
   "description": "",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "index.js",
   "license": "MIT",
   "scripts": {
@@ -33,6 +33,8 @@
     "webpack-dev-server": "^4.0.0"
   },
   "dependencies": {
-    "pixi.js": "^6.1.2"
+    "pixi.js": "^6.1.2",
+    "toml": "^3.0.0",
+    "yaml": "^1.10.2"
   }
 }

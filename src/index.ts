@@ -17,7 +17,9 @@ import Options from '@/Options'
 import SoundManager from '@/sound/SoundManager'
 import Sounds from '@/sound/Sounds'
 import User from '@/User'
+import Users from '@/Users'
 import { Application, Container, Loader, Sprite, Text } from 'pixi.js'
+import { parse as parseYAML } from 'yaml'
 
 export default class Core extends Container {
   private static instance: Core
@@ -40,18 +42,38 @@ export default class Core extends Container {
     mustache_mode: 0
   }
 
+  public users: Users
+
   public dialogScreenStack: GUIScreen[] = []
 
   public constructor() {
     super()
     Core.instance = this
 
-    this.currentUser = new User()
+    this.users = new Users(this)
+    this.users.load()
 
     this.app = new Application({
       width: 800,
       height: 600,
       resolution: devicePixelRatio
+    })
+
+    function isFullscreen(): boolean {
+      return window.outerHeight - window.innerHeight <= 1
+    }
+
+    window.addEventListener('resize', () => {
+      if (isFullscreen()) {
+        const w = 800 / 600
+        this.app.view.style.width = window.innerHeight * w + 'px'
+        this.app.view.style.height = window.innerHeight + 'px'
+        document.body.style.background = 'black'
+      } else {
+        this.app.view.style.width = '800px'
+        this.app.view.style.height = '600px'
+        document.body.style.background = '#232323'
+      }
     })
 
     this.loader = new Loader()
@@ -114,7 +136,7 @@ export default class Core extends Container {
 
     let s = ''
     window.addEventListener('keypress', (e) => {
-      if (this.achievements.mustache_mode) return
+      if (this.users.currentUser?.achievements.mustache_mode) return
       s += e.key
       Logger.info(s)
 
@@ -125,9 +147,9 @@ export default class Core extends Container {
       if (s === 'mustache') {
         s = ''
 
-        if (this.achievements.mustache_mode === 0) {
-          this.achievements.mustache_mode = 1
-
+        if (this.users.currentUser?.achievements.mustache_mode === 0) {
+          if (this.users.currentUser) this.users.currentUser.achievements.mustache_mode = 1
+          this.emit('saveUser', this.users.currentUser)
           this.soundManager.playSound(Sounds.ACHIEVEMENT)
           const p = this.root.addChild(new Text('Achievement: Mustache Mode'))
           setTimeout(() => {
@@ -137,6 +159,10 @@ export default class Core extends Container {
         }
       }
     })
+  }
+
+  public isFullscreen(): boolean {
+    return window.outerHeight - window.innerHeight <= 1
   }
 
   public addDialog(dialog: GUIScreen): void {
@@ -185,10 +211,10 @@ export default class Core extends Container {
   }
 
   public async init(): Promise<void> {
-    const res0 = await (await fetch('static/preloaded_resources.json')).json()
+    const res = parseYAML(await (await fetch('static/resources.yaml')).text())
 
     await new Promise<void>((resolve) => {
-      this.loader.add(Object.entries<string>(res0).map((r: [string, string]) => {
+      this.loader.add(Object.entries<string>(res.preloaded).map((r: [string, string]) => {
         return {
           name: r[0],
           url: r[1]
@@ -198,9 +224,9 @@ export default class Core extends Container {
       })
     })
 
-    await this.fontManager.load()
+    await this.pvzTexts.load()
+    await this.fontManager.preload()
 
-    // this.setScreen(new TitleScreen())
     this.setScreen(new SplashScreen(this))
 
     this.app.ticker.add((dt) => {
@@ -222,15 +248,16 @@ export default class Core extends Container {
     const cb = this.level.addChild(Sprite.from('CoinBank'))
     cb.position.set(50, 600 - cb.height - 1)
 
-    const b = new FontText(this.fontManager, Font.ContinuumBold14, '$' + this.currentUser?.money.toString() ?? '0', 0xB3FD59)
+    const b = new FontText(this.fontManager, Font.ContinuumBold14, '$' + this.users.currentUser?.money.toString() ?? '0', 0xB3FD59)
     b.setAnchor(1, 0)
     b.setPos(123, 6)
     cb.addChild(b)
 
     this.on('addMoney', (count) => {
-      if (this.currentUser) {
-        this.currentUser.money += count
-        b.setText('$' + this.currentUser.money.toString())
+      if (this.users.currentUser) {
+        this.users.currentUser.money += count
+        b.setText('$' + this.users.currentUser.money.toString())
+        this.emit('saveUser', this.users.currentUser)
       }
     })
 
@@ -248,8 +275,8 @@ export default class Core extends Container {
   public saveUser(): void {
     const writer = new BinaryWriter()
     writer.writeUint32(14)
-    writer.writeInt32(this.currentUser!.money)
-    Object.values(this.achievements).forEach(v => {
+    writer.writeInt32(this.users.currentUser!.money)
+    Object.values(this.users.currentUser!.achievements).forEach(v => {
       writer.writeByte(v)
     })
 

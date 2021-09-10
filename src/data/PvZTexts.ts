@@ -1,4 +1,5 @@
-import Convert, { IPVZTexts } from '@/data/Converter'
+import { IPVZTexts } from '@/data/Converter'
+import { parse as parseYAML } from 'yaml'
 
 export default class PvZTexts {
   public lawnStrings: IPVZTexts
@@ -10,10 +11,10 @@ export default class PvZTexts {
   }
 
   public async load(): Promise<void> {
-    const lawnStrings = await (await fetch('static/properties/LawnStrings.txt')).text()
-    const zombatarTOS = await (await fetch('static/properties/ZombatarTOS.txt')).text()
+    const lawnStrings = parseYAML(await (await fetch('static/data/LawnStrings.yaml')).text())
+    const zombatarTOS = parseYAML(await (await fetch('static/data/ZombatarTOS.yaml')).text())
 
-    this.lawnStrings = Convert.toPVZTexts(lawnStrings)
-    this.zombatarTOS = Convert.toPVZTexts(zombatarTOS)
+    this.lawnStrings = lawnStrings
+    this.zombatarTOS = zombatarTOS
   }
 }

@@ -1,6 +1,7 @@
 import Core from '@/.'
 import Font from '@/font/Font'
 import FontText from '@/font/FontText'
+import LawnText from '@/font/LawnText'
 import AbstractButton from '@/gui/components/AbstractButton'
 import { Sprite } from '@pixi/sprite'
 import { filters } from 'pixi.js'
@@ -16,7 +17,7 @@ export default class SeedChooserButton extends AbstractButton {
   private glow: Sprite
   private text: FontText
 
-  public constructor(core: Core, x: number, y: number, title: string, onPress: () => void) {
+  public constructor(core: Core, x: number, y: number, title: string | LawnText, onPress: () => void) {
     super(core, x, y, onPress)
 
     this.bg = this.addChild(Sprite.from('SeedChooserButton'))

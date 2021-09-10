@@ -1,3 +1,4 @@
+import LawnText from '@/font/LawnText'
 import { Graphics } from '@pixi/graphics'
 import { Sprite } from '@pixi/sprite'
 import Core from '../..'
@@ -27,7 +28,7 @@ export default class HelpScreen extends GUIScreen {
     znhm.position.set(45, 45)
     zn.position.set(400 - zn.width / 2, 80)
 
-    this.addChild(new SeedChooserButton(core, 328, 518, 'Main Menu', () => {
+    this.addChild(new SeedChooserButton(core, 328, 518, new LawnText('MAIN_MENU_BUTTON'), () => {
       core.setScreen(new MainMenuScreen(core))
     }))
 

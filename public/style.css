@@ -10,3 +10,10 @@ body {
   overflow: hidden;
 }
 
+#root {
+  width: 100vw;
+  position: relative;
+  display: flex;
+  place-content: center;
+}
+

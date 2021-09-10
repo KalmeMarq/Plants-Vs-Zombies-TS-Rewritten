@@ -5,7 +5,7 @@ import Core from '../..'
 import GUIScreen from './GUIScreen'
 
 export default abstract class DialogScreen extends GUIScreen {
-  private core: Core
+  public core: Core
   /*eslint-disable */
   private dragData: any
   private dragging = false

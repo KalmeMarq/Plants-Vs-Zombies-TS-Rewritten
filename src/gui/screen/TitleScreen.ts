@@ -1,7 +1,9 @@
 import Font from '@/font/Font'
 import FontText from '@/font/FontText'
+import LawnText from '@/font/LawnText'
 import MainMenuScreen from '@/gui/screen/MainMenuScreen'
 import { Graphics, Sprite } from 'pixi.js'
+import { parse as parseYAML } from 'yaml'
 import Core from '../..'
 import GUIScreen from './GUIScreen'
 
@@ -10,6 +12,7 @@ export default class TitleScreen extends GUIScreen {
   private loadMask: Graphics
   private size = 0
   private maxSize: number
+  private logo: Sprite
 
   public constructor(core: Core) {
     super()
@@ -17,13 +20,14 @@ export default class TitleScreen extends GUIScreen {
     this.core = core
     this.addChild(Sprite.from('TitleScreenBg'))
 
-    const logo = this.addChild(Sprite.from('PvZLogo'))
-    const logoM = logo.addChild(Sprite.from('PvZLogoMask'))
-    logo.mask = logoM
-    logo.x = 400
-    logo.y = 10
-    logo.anchor.set(0.5, 0)
+    this.logo = this.addChild(Sprite.from('PvZLogo'))
+    const logoM = this.logo.addChild(Sprite.from('PvZLogoMask'))
+    this.logo.mask = logoM
+    this.logo.x = 400
+    this.logo.y = 10
+    this.logo.anchor.set(0.5, 0)
     logoM.anchor.set(0.5, 0)
+    this.logo.y = -40
 
     const barDirt = this.addChild(Sprite.from('LoadBar_dirt'))
     barDirt.anchor.set(0.5, 0)
@@ -39,7 +43,7 @@ export default class TitleScreen extends GUIScreen {
     this.loadMask.position.set(-this.maxSize / 2, 0)
     barGrass.mask = this.loadMask
 
-    const txt = barDirt.addChild(new FontText(core.fontManager, Font.BrianneTod16, 'LOADING...', 0xD9B720))
+    const txt = barDirt.addChild(new FontText(core.fontManager, Font.BrianneTod16, new LawnText('LOADING'), 0xD9B720))
     txt.setAnchor(0.5, 0.5)
     txt.setPos(0, barDirt.height / 2 - 2)
 
@@ -63,9 +67,15 @@ export default class TitleScreen extends GUIScreen {
     })
   }
 
+  public tick(dt: number): void {
+    if (this.logo.y < 10) {
+      this.logo.y += dt * 4
+    }
+  }
+
   private async loadResources(): Promise<void> {
-    const res = await (await fetch('static/resources.json')).json()
-    const resources = Object.entries<string>(res).map((r: [string, string]) => {
+    const res = parseYAML(await (await fetch('static/resources.yaml')).text())
+    const resources = Object.entries<string>(res.init).map((r: [string, string]) => {
       return {
         name: r[0],
         url: r[1]
@@ -88,11 +98,11 @@ export default class TitleScreen extends GUIScreen {
     this.size = ++now * this.maxSize / total
     this.loadMask.clear()
     this.loadMask.beginFill(0xffffff).drawRect(0, 0, this.size, 33).endFill()
-    await this.core.pvzTexts.load()
+    await this.core.tombsAtlas.load()
     this.size = ++now * this.maxSize / total
     this.loadMask.clear()
     this.loadMask.beginFill(0xffffff).drawRect(0, 0, this.size, 33).endFill()
-    await this.core.tombsAtlas.load()
+    await this.core.fontManager.load()
     this.size = ++now * this.maxSize / total
     this.loadMask.clear()
     this.loadMask.beginFill(0xffffff).drawRect(0, 0, this.size, 33).endFill()

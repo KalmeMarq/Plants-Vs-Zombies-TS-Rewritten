@@ -16,7 +16,7 @@ import HelpScreen from './HelpScreen'
 import LockedDialogScreen from './LockedDialogScreen'
 import MainOptionsDialogScreen from './OptionsScreen'
 import QuitDialogScreen from './QuitDialogScreen'
-import WhoAreYouDialogScreen from './WhoAreYouDialogScreen'
+import WhoAreYouDialogScreen, { NewUserDialog } from './WhoAreYouDialogScreen'
 import ZombatarLADialogScreen from './ZombatarLADialogScreen'
 
 export default class MainMenuScreen extends GUIScreen {
@@ -82,19 +82,7 @@ export default class MainMenuScreen extends GUIScreen {
       alm.position.set(331.9, 440.3)
     })
 
-    const p = this.addChild(Sprite.from('SelectorScreenWoodSign1'))
-    const t = p.addChild(new FontText(core.fontManager, Font.BrianneTod16, 'User name', 0xFBF1C4))
-    t.setAnchor(0.5, 0)
-    t.setPos(p.width / 2, p.height - 58)
-    p.position.set(30, -10)
-
-    this.addChild(new SelectorSignButton(core, 30, p.height - 19, 'SelectorScreenWoodSign2', 'SelectorScreenWoodSign2Pressed', () => {
-      core.addDialog(new WhoAreYouDialogScreen(core))
-    }))
-
-    this.addChild(new SelectorSignButton(core, 30, p.height - 19 + 55, 'SelectorScreenWoodSign3', 'SelectorScreenWoodSign3Pressed', () => {
-      if (!this.core.currentUser?.agreedZombatarTOS) core.addDialog(new ZombatarLADialogScreen(core))
-    }))
+    this.setupSigns()
 
     this.addChild(new MainPotButton(core, 565, 492, 'SelectorScreenOptions1', 'SelectorScreenOptions2', () => {
       this.core.addDialog(new MainOptionsDialogScreen(this.core))
@@ -136,5 +124,29 @@ export default class MainMenuScreen extends GUIScreen {
 
     mb.position.x = /* 800 - mb.width */71.0
     mb.position.y = /* 600 - mb.height */41.0
+  }
+
+  public setupSigns(): void {
+    if (this.core.users.currentUser) {
+      const p = this.addChild(Sprite.from('SelectorScreenWoodSign1'))
+      const t = p.addChild(new FontText(this.core.fontManager, Font.BrianneTod16, (this.core.users.currentUser?.name ?? '') + '!', 0xFBF1C4))
+      t.setAnchor(0.5, 0)
+      t.setPos(p.width / 2, p.height - 58)
+      p.position.set(30, -10)
+
+      this.core.on('userChanged', (id, user) => {
+        t.setText(user.name + '!')
+      })
+
+      this.addChild(new SelectorSignButton(this.core, 30, p.height - 19, 'SelectorScreenWoodSign2', 'SelectorScreenWoodSign2Pressed', () => {
+        this.core.addDialog(new WhoAreYouDialogScreen(this.core))
+      }))
+
+      this.addChild(new SelectorSignButton(this.core, 30, p.height - 19 + 55, 'SelectorScreenWoodSign3', 'SelectorScreenWoodSign3Pressed', () => {
+        if (!this.core.users.currentUser?.agreedZombatarTOS) this.core.addDialog(new ZombatarLADialogScreen(this.core))
+      }))
+    } else {
+      this.core.addDialog(new NewUserDialog(this.core, this))
+    }
   }
 }

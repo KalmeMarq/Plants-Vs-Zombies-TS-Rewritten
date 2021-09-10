@@ -1,0 +1,9 @@
+id: 'peashooter'
+cost: 100
+health: 150
+rechargeTime: 4
+
+almanac:
+  name: PEASHOOTER
+  tooltip: PEASHOOTER_TOOLTIP
+  description: PEASHOOTER_DESCRIPTION

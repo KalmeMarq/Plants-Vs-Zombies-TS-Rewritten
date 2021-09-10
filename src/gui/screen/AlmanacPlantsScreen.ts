@@ -60,7 +60,7 @@ export default class AlamanacPlantsScreens extends GUIScreen {
 
     this.core = core
 
-    const plantsList = Plants.getList().filter(p => p.requiredLevel <= (core.currentUser?.currentLevel ?? 0)).filter(p => p.id !== 'cherry_bomb' && p.id !== 'potato_mine')
+    const plantsList = Plants.getList().filter(p => p.requiredLevel <= (core.users.currentUser?.currentLevel ?? 0)).filter(p => p.id !== 'cherry_bomb' && p.id !== 'potato_mine')
 
     this.addChild(Sprite.from('AlmanacPlantBg'))
 
