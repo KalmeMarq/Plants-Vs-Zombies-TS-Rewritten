@@ -14,6 +14,7 @@ import SplashScreen from '@/gui/screen/SplashScreen'
 import Level from '@/level/Level'
 import Logger from '@/Logger'
 import Options from '@/Options'
+import Reanimator from '@/reanim/Reanimator'
 import SoundManager from '@/sound/SoundManager'
 import Sounds from '@/sound/Sounds'
 import User from '@/User'
@@ -37,6 +38,7 @@ export default class Core extends Container {
   public screen: null | GUIScreen = null
   public loader: Loader
   public tombsAtlas: TombstoneAtlas
+  public reanimator: Reanimator
   public achievements = {
     sunny_day: 0,
     mustache_mode: 0
@@ -52,6 +54,7 @@ export default class Core extends Container {
 
     this.users = new Users(this)
     this.users.load()
+    this.reanimator = new Reanimator()
 
     this.app = new Application({
       width: 800,
@@ -94,6 +97,162 @@ export default class Core extends Container {
     this.app.stage.addChild(this.root)
 
     this.debugOverlay = new DebugOverlay(this)
+
+    // const notSync = async() => {
+    //   await new Promise<void>((resolve) => {
+    //     this.loader.add([
+    //       { name: 'PumpkinBack', url: './static/reanim/Pumpkin_back.png' },
+    //       { name: 'PumpkinFront', url: './static/reanim/Pumpkin_front.png' },
+    //       { name: 'Sun1', url: './static/reanim/Sun1.png' },
+    //       { name: 'Sun2', url: './static/reanim/Sun2.png' },
+    //       { name: 'Sun3', url: './static/reanim/Sun3.png' }
+    //     ]).load(() => {
+    //       resolve()
+    //     })
+    //   })
+
+    //   const data = parseYAML(await (await fetch('./static/data/reanim/Sun.yaml')).text())
+    //   const dataPumpkin = parseYAML(await (await fetch('./static/data/reanim/Pumpkin.yaml')).text())
+    //   const ticks3 = data.tracks[0].ticks
+    //   const ticks2 = data.tracks[1].ticks
+    //   const ticks1 = data.tracks[2].ticks
+    //   const ticksPumpkinBack = dataPumpkin.tracks[1].ticks
+    //   const ticksPumpkinFront = dataPumpkin.tracks[2].ticks
+
+    //   const sun3 = Sprite.from('Sun3')
+    //   const sun2 = Sprite.from('Sun2')
+    //   const sun1 = Sprite.from('Sun1')
+    //   const pumpkinBack = Sprite.from('PumpkinBack')
+    //   const pumpkinFront = Sprite.from('PumpkinFront')
+    //   this.root.addChild(sun3)
+    //   this.root.addChild(sun2)
+    //   this.root.addChild(sun1)
+
+    //   const pumpkinRenderer = new Container()
+    //   pumpkinRenderer.addChild(pumpkinBack)
+    //   pumpkinRenderer.addChild(pumpkinFront)
+    //   this.root.addChild(pumpkinRenderer)
+    //   pumpkinRenderer.position.x = 100
+
+    //   this.root.position.set(300, 300)
+
+    //   // const transformsSun3: Matrix[] = []
+    //   // const transformsSun2: Matrix[] = []
+
+    //   const transformsSun3: ReanimTransform[] = []
+    //   let lastTrans3: null | ReanimTransform = null
+
+    //   for (let i = 0; i < ticks3.length; i++) {
+    //     const tick = ticks3[i]
+    //     const trans = new ReanimTransform()
+
+    //     if (tick.x) trans.tX = tick.x
+    //     if (tick.y) trans.tY = tick.y
+    //     if (tick.sx) trans.sX = tick.sx
+    //     if (tick.sy) trans.sY = tick.sy
+    //     if (tick.kx) trans.kX = -2 * tick.kx * Math.PI / 360
+    //     if (tick.ky) trans.kY = -2 * tick.ky * Math.PI / 360
+
+    //     trans.fillInFrom(lastTrans3)
+    //     transformsSun3.push(trans)
+    //     lastTrans3 = trans
+    //   }
+
+    //   const transformsSun2: ReanimTransform[] = []
+    //   let lastTrans2: null | ReanimTransform = null
+
+    //   for (let i = 0; i < ticks2.length; i++) {
+    //     const tick = ticks2[i]
+    //     const trans = new ReanimTransform()
+
+    //     if (tick.x) trans.tX = tick.x
+    //     if (tick.y) trans.tY = tick.y
+    //     if (tick.sx) trans.sX = tick.sx
+    //     if (tick.sy) trans.sY = tick.sy
+    //     if (tick.kx) trans.kX = -2 * tick.kx * Math.PI / 360
+    //     if (tick.ky) trans.kY = -2 * tick.ky * Math.PI / 360
+
+    //     trans.fillInFrom(lastTrans2)
+    //     transformsSun2.push(trans)
+    //     lastTrans2 = trans
+    //   }
+
+    //   const transformsSun1: ReanimTransform[] = []
+    //   let lastTrans1: null | ReanimTransform = null
+
+    //   for (let i = 0; i < ticks1.length; i++) {
+    //     const tick = ticks1[i]
+    //     const trans = new ReanimTransform()
+
+    //     if (tick.x) trans.tX = tick.x
+    //     if (tick.y) trans.tY = tick.y
+    //     if (tick.sx) trans.sX = tick.sx
+    //     if (tick.sy) trans.sY = tick.sy
+    //     if (tick.kx) trans.kX = -2 * tick.kx * Math.PI / 360/* -2 * Math.PI * tick.kx / 360 */
+    //     if (tick.ky) trans.kY = -2 * tick.ky * Math.PI / 360/* -2 * Math.PI * tick.ky / 360 */
+
+    //     trans.fillInFrom(lastTrans1)
+    //     transformsSun1.push(trans)
+    //     lastTrans1 = trans
+    //   }
+
+    //   const transformsPumpkinFront: ReanimTransform[] = []
+    //   let lastTransPumpkinFront: null | ReanimTransform = null
+
+    //   for (let i = 0; i < ticksPumpkinFront.length; i++) {
+    //     const tick = ticksPumpkinFront[i]
+    //     const trans = new ReanimTransform()
+
+    //     if (tick.x) trans.tX = tick.x
+    //     if (tick.y) trans.tY = tick.y
+    //     if (tick.sx) trans.sX = tick.sx
+    //     if (tick.sy) trans.sY = tick.sy
+    //     if (tick.kx) trans.kX = -2 * tick.kx * Math.PI / 360/* -2 * Math.PI * tick.kx / 360 */
+    //     if (tick.ky) trans.kY = -2 * tick.ky * Math.PI / 360/* -2 * Math.PI * tick.ky / 360 */
+
+    //     trans.fillInFrom(lastTransPumpkinFront)
+    //     transformsPumpkinFront.push(trans)
+    //     lastTransPumpkinFront = trans
+    //   }
+
+    //   const transformsPumpkinBack: ReanimTransform[] = []
+    //   let lastTransPumpkinBack: null | ReanimTransform = null
+
+    //   for (let i = 0; i < ticksPumpkinBack.length; i++) {
+    //     const tick = ticksPumpkinBack[i]
+    //     const trans = new ReanimTransform()
+
+    //     if (tick.x) trans.tX = tick.x
+    //     if (tick.y) trans.tY = tick.y
+    //     if (tick.sx) trans.sX = tick.sx
+    //     if (tick.sy) trans.sY = tick.sy
+    //     if (tick.kx) trans.kX = -2 * tick.kx * Math.PI / 360/* -2 * Math.PI * tick.kx / 360 */
+    //     if (tick.ky) trans.kY = -2 * tick.ky * Math.PI / 360/* -2 * Math.PI * tick.ky / 360 */
+
+    //     trans.fillInFrom(lastTransPumpkinBack)
+    //     transformsPumpkinBack.push(trans)
+    //     lastTransPumpkinBack = trans
+    //   }
+
+    //   let frameSun = 0
+    //   setInterval(() => {
+    //     frameSun = (frameSun + 1) % (ticks3.length)
+
+    //     sun3.transform.setFromMatrix(transformsSun3[frameSun].matrix)
+    //     sun2.transform.setFromMatrix(transformsSun2[frameSun].matrix)
+    //     sun1.transform.setFromMatrix(transformsSun1[frameSun].matrix)
+    //   }, 16 * 6)
+
+    //   let framePumpkin = 0
+    //   setInterval(() => {
+    //     framePumpkin = (framePumpkin + 1) % ticks3.length
+
+    //     pumpkinBack.transform.setFromMatrix(transformsPumpkinBack[framePumpkin].matrix)
+    //     pumpkinFront.transform.setFromMatrix(transformsPumpkinFront[framePumpkin].matrix)
+    //   }, 16 * 6)
+    // }
+
+    // notSync()
     this.root.addChild(this.debugOverlay)
 
     window.addEventListener('click', (e) => {
@@ -211,6 +370,7 @@ export default class Core extends Container {
   }
 
   public async init(): Promise<void> {
+    await this.reanimator.load()
     const res = parseYAML(await (await fetch('static/resources.yaml')).text())
 
     await new Promise<void>((resolve) => {

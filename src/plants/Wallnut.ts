@@ -5,6 +5,8 @@ export default class Wallnut extends Plant {
   private maxHealth = 2000
   public static cost = 50
   public id = 'wall_nut'
+  public lastFrameTime = 0
+  public frame = 0
 
   protected override init(): void {
     Plant.plants.push({ p: this, c: Plant.cost })
@@ -15,6 +17,23 @@ export default class Wallnut extends Plant {
   }
 
   public override update(): void {
+    if (this.lastFrameTime === 0) {
+      this.lastFrameTime = Date.now()
+    }
+
+    if (Date.now() - this.lastFrameTime >= 1000 / 12) {
+      const ani = this.level.core.reanimator.reanimDefs.get('Wallnut')
+
+      if (ani) {
+        const trackFace = ani.trackNameMap.anim_face
+        this.frame = (this.frame + 1) % (/* trackFace.numOfTransforms */16)
+
+        this.plantSprite.transform.setFromMatrix(trackFace.transforms[this.frame].matrix)
+      }
+
+      this.lastFrameTime = Date.now()
+    }
+
     if (this.health <= 0) {
       this.parent.removeChild(this)
       const f = this.level.slots.find(s => s.r === this.r && this.c === s.c)

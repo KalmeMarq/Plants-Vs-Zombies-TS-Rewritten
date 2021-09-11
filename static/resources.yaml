@@ -131,3 +131,6 @@ init:
   TombstonesMask: ./static/images/Tombstones_.png
   LilyPad_body: ./static/reanim/LilyPad_body.png
   GraveBuster: ./static/temp/GraveBuster.png
+  Sun3: ./static/reanim/Sun3.png
+  Sun2: ./static/reanim/Sun2.png
+  Sun1: ./static/reanim/Sun1.png

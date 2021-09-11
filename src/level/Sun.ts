@@ -1,6 +1,6 @@
 import Level from '@/level/Level'
 import Sounds from '@/sound/Sounds'
-import { Graphics, Sprite } from 'pixi.js'
+import { Container, Graphics, Sprite } from 'pixi.js'
 
 enum ISunflowerState {
   Default,
@@ -15,6 +15,11 @@ export default class Sun extends Graphics {
   public minY: number
   private sstate: ISunflowerState
   public speed = 0
+  public lastFrameTime = 0
+  public frameSun = 0
+  public sun3: Sprite
+  public sun2: Sprite
+  public sun1: Sprite
 
   public constructor(level: Level, x?: number, y?: number, count?: number) {
     super()
@@ -28,9 +33,13 @@ export default class Sun extends Graphics {
     this.position.y = y ?? 0
     this.zIndex = 10
 
-    const s = this.addChild(Sprite.from('Sun'))
-    s.scale.set(0.7, 0.7)
-    s.anchor.set(0.5, 0.5)
+    const sunRenderer = new Container()
+    this.sun3 = sunRenderer.addChild(Sprite.from('Sun3'))
+    this.sun2 = sunRenderer.addChild(Sprite.from('Sun2'))
+    this.sun1 = sunRenderer.addChild(Sprite.from('Sun1'))
+    sunRenderer.scale.set(1, 1)
+    sunRenderer.position.set(-sunRenderer.width / 2, -sunRenderer.height / 2)
+    this.addChild(sunRenderer)
 
     this.interactive = true
     this.buttonMode = true
@@ -67,6 +76,26 @@ export default class Sun extends Graphics {
 
   public update(dt: number): void {
     this.timer += dt
+    if (this.lastFrameTime === 0) {
+      this.lastFrameTime = Date.now()
+    }
+
+    if (Date.now() - this.lastFrameTime >= 1000 / 12) {
+      const ani = this.level.core.reanimator.reanimDefs.get('Sun')
+
+      if (ani) {
+        const trackSun3 = ani.trackNameMap.Sun3
+        const trackSun2 = ani.trackNameMap.Sun2
+        const trackSun1 = ani.trackNameMap.Sun1
+        this.frameSun = (this.frameSun + 1) % (trackSun3.numOfTransforms)
+
+        this.sun3.transform.setFromMatrix(trackSun3.transforms[this.frameSun].matrix)
+        this.sun2.transform.setFromMatrix(trackSun2.transforms[this.frameSun].matrix)
+        this.sun1.transform.setFromMatrix(trackSun1.transforms[this.frameSun].matrix)
+      }
+
+      this.lastFrameTime = Date.now()
+    }
 
     if (this.sstate === ISunflowerState.Collecting) {
       const p0 = {

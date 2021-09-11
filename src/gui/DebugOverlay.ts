@@ -19,7 +19,7 @@ export default class DebugOverlay extends Container {
     this.zIndex = 2000
     this.visible = this.core.showDebug
 
-    this.addDebugText(`PVZTS Rewritten ${isDev ? '(v0.2.4/dev)' : 'v0.2.4'}`)
+    this.addDebugText(`PVZTS Rewritten ${isDev ? '(v0.2.5/dev)' : 'v0.2.5'}`)
     this.addDebugText('Level: null LevelID: -1')
     this.fpsT = this.addDebugText('FPS: 0')
     // this.sunsCT = this.addDebugText(`SunCount: ${0}`)

@@ -112,8 +112,9 @@ export default class Level extends Container {
     })
 
     const bg = this.addChild(Sprite.from('Background2'))
-    bg.zIndex = -2
+    bg.zIndex = -12
     bg.position.x = -220
+    this.sortableChildren = true
 
     for (let i = 0; i < 45; i++) {
       const c = (i % 9)
@@ -140,7 +141,9 @@ export default class Level extends Container {
 
       const a = Math.round(Math.random() * 10)
       if (a > 8 && c >= 7) {
-        this.tombs.push(this.addChild(new Tombstone(core, x, y, r, c)))
+        const t = this.addChild(new Tombstone(core, x, y, r, c))
+        this.tombs.push(t)
+        t.zIndex -= 10
       }
     }
 
@@ -160,6 +163,17 @@ export default class Level extends Container {
   }
 
   public update(dt: number): void {
+    if (this.lastSunTime === 0) {
+      this.lastSunTime = Date.now()
+    }
+
+    if (Date.now() - this.lastSunTime > 10000) {
+      const sun0G = new Sun(this)
+      this.suns.push(sun0G)
+      this.addChild(sun0G)
+      this.lastSunTime = Date.now()
+    }
+
     for (let i = 0; i < this.lawnmowers.length; i++) {
       this.lawnmowers[i].update(dt)
     }
@@ -186,17 +200,6 @@ export default class Level extends Container {
 
     for (let i = 0; i < this.slots.length; i++) {
       this.slots[i].plant?.update(dt)
-    }
-
-    if (this.lastSunTime === 0) {
-      this.lastSunTime = Date.now()
-    }
-
-    if (Date.now() - this.lastSunTime > 10000) {
-      const sun0G = new Sun(this)
-      this.suns.push(sun0G)
-      this.addChild(sun0G)
-      this.lastSunTime = Date.now()
     }
 
     if (this.lastZombieTime === 0) {
